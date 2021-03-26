@@ -2,6 +2,9 @@
 # ----------------------- Librerias importadas
 
 import numpy as np
+import xlsxwriter
+import xlrd
+import openpyxl
 
 class Lug_generator():
     """
@@ -15,8 +18,13 @@ class Lug_generator():
         """
         self.excel_filename = excel_filename
         self.excel_path = excel_path
+        self.input_file = excel_path + '/' + excel_filename
 
-    # def crear_input(self):
+    def read_input(self):
+
+        input = openpyxl.load_workbook(self.input_file)
+        ws = input.active
+
     #     """
     #     Crea archivo input de ISAMI a partir de un Excel
     #     """
