@@ -1,0 +1,5 @@
+pytest
+matplotlib
+six
+numpy
+pyNastran
