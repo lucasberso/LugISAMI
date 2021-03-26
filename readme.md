@@ -14,7 +14,7 @@ For developers:
 
 ```bash
 git clone ...
-cd LugISAMI
+cd lugISAMI
 python setup.py develop
 ```
 
