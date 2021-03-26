@@ -3,7 +3,7 @@ filename="ISAMI_FINAL.py"
 file_exists = os.path.isfile(filename)
 
 if file_exists:
-    print("ok")
+    pass
 else:
     f = open("ISAMI_FINAL.py", "w")
     f.write("Created file")
