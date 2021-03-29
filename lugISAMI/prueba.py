@@ -140,6 +140,5 @@ if __name__ == '__main__':
         f.writelines("MS.RunAllAnalysis()\n")
         f.writelines("MS.Save('Lug.czm')\n")
 
-
         cont = cont + 1
 
