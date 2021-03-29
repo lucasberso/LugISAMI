@@ -1,13 +1,16 @@
 import openpyxl
+from path import Path
+testcases_dir = Path(__file__).dirname()/"testcases"
+if __name__ == '__main__':
 
-book = openpyxl.load_workbook('Lug_manual.xlsm')
-sheet = book['Analysis']
-
-initial_row = 3
+    filename = '../H/Lug_manual.xlsm'
+    book= openpyxl.load_workbook(testcases_dir+ '/'+ filename)
+    sheet = book['Analysis']
+    initial_row = 3
 # final_row=sheet.max_row
-final_row = 4
-initial_column = 1
-final_column = sheet.max_column - 1
+    final_row = 4
+    initial_column = 1
+    final_column = sheet.max_column - 1
 
 dict_analysis = {}
 
