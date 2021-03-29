@@ -16,7 +16,6 @@ MS.CreateObject('DPines3','AirbusEO_DPin',[
 ['/Diameter','CaesamQty_LENGTH:6,35;mm'],
 ['/Material','AirbusEO_TMaterial:Ti-6Al-4V'],
 ])
- 
 
 MS.CreateObject('DBushes3','AirbusEO_DBush',[
 ['/CsmMbr_Name','S:D_Bush3'],

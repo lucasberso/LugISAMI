@@ -74,6 +74,72 @@ if __name__ == '__main__':
             "['/BushMaterial','AirbusEO_TMaterial:" + campo6 + "'],\n"
             "])\n\n")
 
+        f.writelines("MS.CreateObject('Geom" + str(cont) + "','AirbusEO_DLugGeometry',[\n"
+            "['/CsmMbr_Name','S:Geom'],\n"
+            "['/LugType','Enum_LugType:SIMPLE'],\n"
+            "['/Width','CaesamQty_LENGTH:" + str(campo10) + ";mm'],\n"
+            "['/Length','CaesamQty_LENGTH:" + str(campo11) + ";mm'],\n"
+            "['/Thick','CaesamQty_LENGTH:" + str(campo12) + ";mm'],\n"
+            "['/ThickUnstudied','CaesamQty_LENGTH:" + str(campo13) + ";mm'],\n"
+            "['/LugPin','AirbusEO_DPin:DPines" + str(cont) +  "'],\n"
+            "['/LugBush','AirbusEO_DBush:DBushes" + str(cont) + "'],\n"
+            "['/PinOffsetX','CaesamQty_LENGTH:" + str(campo14) + ";mm'],\n"
+            "['/PinOffsetY','CaesamQty_LENGTH:" + str(campo15) + ";mm'],\n"
+            "['/SuperiorAngle','CaesamQty_PLANE_ANGLE:" + str(campo16) + ";deg'],\n"
+            "['/InferiorAngle','CaesamQty_PLANE_ANGLE:" + str(campo17) + ";deg'],\n"
+            "['/NotchedLength','CaesamQty_LENGTH:20;mm'],\n"
+            "['/ShearType','Enum_ToggleShearType:"+ campo18 +"'],\n"
+            "['/StructureMaterial','AirbusEO_TMaterial:" + campo19 + "'],\n"
+            "])\n\n")
+
+        f.writelines("MS.CreateObject('Loading" + str(cont) +"', 'AirbusEO_DLugLoading,[\n"
+        "['/CsmMbr_Name','S:Loading'],\n"
+        "['/LoadingType','Enum_LoadingType:NO_COEFFICIENT'],\n"
+        "['/LugForceLoadingType','Enum_TogglePHForceLoadingType:RESULTANT AND ANGLE'],\n"
+        "['/LugCoefficientForceX','D:20'],\n"
+        "['/LugCoefficientForceY','D:30'],\n"
+        "['/LugForceX','CaesamQty_FORCE:10000;N'],\n"
+        "['/LugForceY','CaesamQty_FORCE:10000;N'],\n"
+        "['/LugCoefficientResultantForce','D:100'],\n"
+        "['/LugResultantForce','CaesamQty_FORCE:" + str(campo7) + ";N'],\n"
+        "['/LugResultantAngle','CaesamQty_PLANE_ANGLE:" + str(campo8) + ";deg'],\n"
+        "['/NbParameters','I:32'],\n"
+        "['/LoadingRatio','D:" + str(campo9) + "'],\n"
+        "['/NbClasses','I:1'],\n"
+        "['/Compression','Enum_ToggleCompression:Smin'],\n"
+        "['/UserSmin','CaesamQty_PRESSURE:0;MPa'],\n"
+        "['/PropagationComputation','CaesamEnum_YesNo:No'],\n"
+        "['/MLPDesign','CaesamEnum_YesNo:No'],\n"
+        "['/LoadRedistributionFactor','D:1']\n"
+        "]))\n\n")
+
+
+        f.writelines("MS.CreateObject('Law" + str(cont) + "','AirbusEO_DFatigueLawGeoDependent',[\n"
+        "['/CsmMbr_Name','S:Law'],\n"
+        "['/IsCracked','S:No'],\n"
+        "['/LawType','Enum_ToggleLawTypeGeoDependent:Fatigue Law'],\n"
+        "['/DamageCalculationMethod','Enum_ToggleDamageCalculationMethod:LOCAL STRESS ANALYSIS'],\n"
+        "['/FatigueLaw','Enum_ToggleFatigueLaw:AFI LAW'],\n"
+        "['/Orientation_init','Enum_Orientation:" + campo20 + "'],\n"
+        "['/Configuration_init','S:Configuration:AFI/thickness:50-200'],\n" #HAY QUE CAMBIAR ESTO
+        "])\n\n")
+
+        f.writelines("MS.CreateStandaloneAnalysis('initiation_lug',None,[\n"
+        "   '/CsmMbr_Name S:" + keys + "',\n"
+        "   '/Geometry *AirbusEO_DLugGeometry:',\n"
+        "   '/Geometry/ReferencedObject AirbusEO_DLugGeometry:Geom" + str(cont) + "',\n"
+        "   '/Loading *AirbusEO_DLugLoading:',\n"
+        "   '/Loading/ReferencedObject AirbusEO_DLugLoading:Loading" + str(cont) + "',\n"
+        "   '/FatigueLaw *AirbusEO_DFatigueLawGeoDependent:',\n"
+        "   '/FatigueLaw/ReferencedObject AirbusEO_DFatigueLawGeoDependent:Law" + str(cont) + "',\n"
+        "],\n"
+        "'"+ keys + "'\n\n")
+
+        f.writelines("\n\n")
+
+        f.writelines("MS.RunAllAnalysis()\n")
+        f.writelines("MS.Save('Lug.czm')\n")
+
 
         cont = cont + 1
 
