@@ -1,33 +1,26 @@
-#import os.path
-#filename="ISAMI_FINAL.py"
-#file_exists = os.path.isfile(filename)
-
-#if file_exists:
-#    pass
-#else:
-#    f = open("ISAMI_FINAL.py", "w")
-#    f.write("Created file")
-
 import openpyxl
 
-path=
-input = openpyxl.load_workbook('Lug_manual.xlsm', 'r')
-ws = input.active
+book = openpyxl.load_workbook('Lug_manual.xlsm')
+sheet = book['Analysis']
+
 initial_row = 3
-final_row = ws.max_row
-initial_column = 2
-final_column = ws.max_column - 1
-dictio = {}
-headers = ['Load', 'Angle']
-if initial_row == final_row:
-    vector = [initial_row]
-else:
-    vector = list(range(initial_row, final_row))
-for i in vector:
-    print(i)
-    for j in range(initial_column, final_column):
-        pass
-print('Hola')
+# final_row=sheet.max_row
+final_row = 4
+initial_column = 1
+final_column = sheet.max_column - 1
+
+dict_analysis = {}
+
+for row in range(initial_row, final_row):
+    location = sheet.cell(row, 1).value
+    dict = {}
+
+    for column in range(initial_column + 1, final_column - 2):
+        keyname = sheet.cell(2, column).value
+        value = sheet.cell(row, column).value
+        dict.update({keyname: value})
+
+    dict_analysis.update({location: dict})
 
 
 
