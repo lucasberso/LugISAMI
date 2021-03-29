@@ -1,9 +1,9 @@
 
 # ----------------------- Librerias importadas
 
-import numpy as np
-import xlsxwriter
-import xlrd
+#import numpy as np
+#import xlsxwriter
+#import xlrd
 import openpyxl
 
 class Lug_generator():
@@ -40,7 +40,7 @@ class Lug_generator():
                 pass
         print('Hola')
 
-    def write_output(self):
+    #def write_output(self):
 
         # f = open("myfile.txt", "x")
         # f.writelines("########################\n")
