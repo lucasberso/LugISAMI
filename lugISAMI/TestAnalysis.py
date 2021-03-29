@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     initial_column = 2
     final_column = sheet.max_column - 1
-    cont = 1
+
     dict_global = {}
     for i in range(initial_row, final_row + 1):
 
@@ -28,14 +28,8 @@ if __name__ == '__main__':
         dict_global.update({Location: dict})
 
     f = open("myfile.txt", "x")
-    f.writelines("########################\n")
-    f.writelines("# ISAMI VERSION: 8.0.0 #\n")
-    f.writelines("# ANALYSIS: LUG        #\n")
-    f.writelines("# Mode: SAA            #\n")
-    f.writelines("# Written by: ALTRAN   #\n")
-    f.writelines("# Date: 25/01/14       #\n")
-    f.writelines("########################\n")
 
+    cont = 1
     for keys in dict_global.keys():
         campo1 = dict_global[keys]["Standar Pin"]
         campo2 = dict_global[keys]["/Diameter"]
@@ -133,7 +127,7 @@ if __name__ == '__main__':
         "   '/FatigueLaw *AirbusEO_DFatigueLawGeoDependent:',\n"
         "   '/FatigueLaw/ReferencedObject AirbusEO_DFatigueLawGeoDependent:Law" + str(cont) + "',\n"
         "],\n"
-        "'"+ keys + "'\n\n")
+        "'"+ keys + "')\n\n")
 
         f.writelines("\n\n")
 

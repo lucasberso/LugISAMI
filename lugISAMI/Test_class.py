@@ -13,11 +13,4 @@ if __name__ == '__main__':
     hola2 = Lug.read_template()
     hola3 = Lug.write_output(output_filename='tonto')
     print('hola')
-    # if os.path.isfile('myfile.txt'):
-    #     os.remove('myfile.txt')
-    # else:
-    #     f = open("myfile.txt", "x")
 
-# Lug.crear_input()
-# Lug.correr_todo()
-# Lug.obtenerKT_html()
