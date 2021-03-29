@@ -40,7 +40,7 @@ class Lug_generator():
                 pass
         print('Hola')
 
-    #def write_output(self):
+    def write_output(self):
 
         # f = open("myfile.txt", "x")
         # f.writelines("########################\n")
