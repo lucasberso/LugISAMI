@@ -11,6 +11,7 @@ if __name__ == '__main__':
 
     Lug = Lug_generator(filename, testcases_dir)
     Lug.read_input()
+
 # Lug.crear_input()
 # Lug.correr_todo()
 # Lug.obtenerKT_html()

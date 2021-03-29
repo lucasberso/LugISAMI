@@ -24,22 +24,29 @@ class Lug_generator():
 
         input = openpyxl.load_workbook(self.input_file)
         ws = input.active
+        initial_row = 3
+        final_row = ws.max_row
+        initial_column = 2
+        final_column = ws.max_column - 1
+        dictio ={}
+        headers = ['Load','Angle']
+        if initial_row == final_row:
+            vector = [initial_row]
+        else:
+            vector = list(range(initial_row,final_row))
+        for i in vector:
+            print(i)
+            for j in range(initial_column, final_column):
+                pass
+        print('Hola')
 
-    #     """
-    #     Crea archivo input de ISAMI a partir de un Excel
-    #     """
-    # def llamar_isami(self):
-    #     """
-    #     Llama a ISAMI para correr el archivo generado
-    #     """
-    # def obtener_KT(self):
-    #     """
-    #     Post-procesa los KT almacenados en el HTML
-    #     """
-    # def correr_todo(self):
-    #     """
-    #     Realiza el análisis completo
-    #     """
-    #     self.crear_input()
-    #     self.llamar_isami()
-    #     self.obtener_KT()
+    def write_output(self):
+
+        # f = open("myfile.txt", "x")
+        # f.writelines("########################\n")
+        # f.writelines("# ISAMI VERSION: 8.0.0 #\n")
+        # f.writelines("# ANALYSIS: LUG        #\n")
+        # f.writelines("# Mode: SAA            #\n")
+        # f.writelines("# Written by: ALTRAN   #\n")
+        # f.writelines("# Date: 25/01/14       #\n")
+        # f.writelines("########################\n")
