@@ -1,28 +1,26 @@
-# LUG ISAMI
+# Lug ISAMI
 
-Python based tool that provides the capability of...
+Librería que asiste en la escritura de archivos de entrada ISAMI para el análisis de orejetas. 
 
-## Install
+## Instalación
 
-Altran users best install directly from this repository using pip:
 
 ```bash
 pip install ...
 ```
 
-For developers:
+## Uso
 
-```bash
-git clone ...
-cd lugISAMI
-python setup.py develop
-```
-
-## Usage
-
-#### Build an ISAMI input file:
+#### Creación de un archivo input para ISAMI:
 
 ```python
-from ... import ...
+from Lug import Lug_generator
+from path import Path
+
+testcases_dir = Path(__file__).dirname()
+filename = 'Lug_template.xlsm' # Nombre del archivo Excel con los datos de entrada.
+Lug = Lug_generator(filename, testcases_dir) # Inicializa la librería con el archivo input y la ruta.
+# Escribe y almacena el archivo input de ISAMI.
+Lug.write_output(output_filename='ISAMI_input_file')
 ```
 

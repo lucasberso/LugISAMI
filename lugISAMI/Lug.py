@@ -181,7 +181,7 @@ class Lug_generator():
             "   '/FatigueLaw/ReferencedObject AirbusEO_DFatigueLawGeoDependent:Law" + str(cont) + "',\n"
             "],\n"
             "'" + keys + "')\n \n")
-            cont = cont + 1 #Actualización del contador en caso de múltiples casos de estudio.
+            cont = cont + 1 # Actualización del contador en caso de múltiples casos de estudio.
 
         file.writelines(" \n")
         file.writelines("MS.RunAllAnalysis()\n")
