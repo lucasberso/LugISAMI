@@ -60,15 +60,16 @@ class Lug_generator():
         Lee del archivo de entrada Excel los datos procedentes de las pestañas análisis y materiales.
         """
         self.analysis_data = self.read_input(initial_row = 4, initial_column = 1, header_row = 3, name_sheet='Analysis')
-        self.material_data = self.read_input(initial_row = 5, initial_column = 2, header_row = 4, name_sheet='Materials')
+        material_data = self.read_input(initial_row = 5, initial_column = 2, header_row = 4, name_sheet='Materials')
+        self.material_data = dict(sorted(material_data.items()))
 
     def write_output(self, output_filename):
 
         self.read_template()
-
-        if os.path.isfile(output_filename + '.txt'):
-            os.remove(output_filename + '.txt')
-        file = open(output_filename + '.txt', "x")
+        self.output_file = self.excel_path + '/' + output_filename
+        if os.path.isfile(self.output_file + '.txt'):
+            os.remove(self.output_file + '.txt')
+        file = open(self.output_file + '.txt', "x")
         today_date = date.today()
 
         file.writelines("########################\n")
@@ -77,7 +78,7 @@ class Lug_generator():
         file.writelines("# Mode: SAA            #\n")
         file.writelines("# Written by: ALTRAN   #\n")
         file.writelines("# Date: " + today_date.strftime("%d/%m/%Y") + "     #\n")
-        file.writelines("########################\n")
+        file.writelines("######################\n")
 
         for keys in self.material_data.keys():
             campo1 = keys
@@ -85,6 +86,8 @@ class Lug_generator():
             campo3 = self.material_data[keys]["CODE"]
             campo4 = self.material_data[keys]["User/Referenced"]
             file.writelines("MS.LoadMaterial("+"'"+ campo1 +"'" +"," + campo2 +"," + campo3 +"," + campo4 +")\n")
+
+        file.writelines(" \n")
 
         cont = 1
         for keys in self.analysis_data.keys():
@@ -96,7 +99,7 @@ class Lug_generator():
             campo6 = self.analysis_data[keys]["/BushMaterial"]
             campo7 = self.analysis_data[keys]["/LugResultantForce"]
             campo8 = self.analysis_data[keys]["/LugResultantAngle"]
-            campo9 = self.analysis_data[keys]["/LoadingRatio"]
+            campo9 = self.analysis_data[keys]["/LoadingRatio"] # REVIEW THIS!!
             campo10 = self.analysis_data[keys]["/Width"]
             campo11 = self.analysis_data[keys]["/Length"]
             campo12 = self.analysis_data[keys]["/Thick"]
@@ -109,17 +112,29 @@ class Lug_generator():
             campo19 = self.analysis_data[keys]["/StructureMaterial"]
             campo20 = self.analysis_data[keys]["/Orientation_init"]
 
+            folder = ["Standar Pin","/Diameter","/Material","Standar Bush","Standar Bush","/BushExternalDiameter","/BushMaterial","/LugResultantForce",
+                      "/LugResultantAngle","/LoadingRatio","/Width","/Length","/Thick","/ThickUnstudied","/PinOffsetX","/PinOffsetY","/SuperiorAngle",
+                      "/InferiorAngle","/ShearType","/StructureMaterial","/Orientation_init"]
+            dic_folder = {}
+            for i in folder:
+                value = self.analysis_data[keys][i]
+                if not isinstance(value,str):
+                    value = str(self.analysis_data[keys][i]).replace('.', ',')
+                else:
+                    pass
+                dic_folder.update({i:value})
+
             file.writelines("MS.CreateObject('DPines" + str(cont) + "','AirbusEO_DPin',[\n"
             "['/CsmMbr_Name','S:DPin" + str(cont) + "'],\n"
             "['/CsmMbr_Uptodate','B:TRUE'],\n"
-            "['/Diameter','CaesamQty_LENGTH:" + str(campo2) + ";mm'],\n"
-            "['/Material','AirbusEO_TMaterial:" + campo3 + "'],\n"
-            "])\n\n")
+            "['/Diameter','CaesamQty_LENGTH:" + dic_folder["/Diameter"] + ";mm'],\n"
+            "['/Material','AirbusEO_TMaterial:" + dic_folder["/Material"] + "'],\n"
+            "])\n\n\n")
 
             file.writelines("MS.CreateObject('DBushes" + str(cont) + "','AirbusEO_DBush',[\n"
             "['/CsmMbr_Name','S:D_Bush" + str(cont) + "'],\n"
-            "['/BushInternalDiameter','CaesamQty_LENGTH:" + str(campo2) + ";mm'],\n"
-            "['/BushExternalDiameter','CaesamQty_LENGTH:" + str(campo5) + ";mm'],\n"
+            "['/BushInternalDiameter','CaesamQty_LENGTH:" + dic_folder["/BushInternalDiameter"] + ";mm'],\n"
+            "['/BushExternalDiameter','CaesamQty_LENGTH:" + dic_folder["/BushExternalDiameter"] + ";mm'],\n"
             "['/BushMaterial','AirbusEO_TMaterial:" + campo6 + "'],\n"
             "])\n\n")
 
@@ -190,7 +205,7 @@ class Lug_generator():
 
         file.writelines("MS.RunAllAnalysis()\n")
         file.writelines("MS.Save('" + output_filename +".czm')\n")
-        
+        file.close()
 
     # def read_materials(self):
     #     """
