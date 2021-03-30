@@ -47,6 +47,8 @@ class Lug_generator():
         input_global = {}
         for i in range(initial_row, final_row + 1):
             name = sheet.cell(i, initial_column).value
+            if name is None:
+                continue
             aux_dict = {}
             for j in range(initial_column, final_column + 1):
                 key = sheet.cell(header_row, j).value
@@ -65,13 +67,14 @@ class Lug_generator():
 
     def write_output(self, output_filename):
 
-        self.read_template()
+        self.read_template() # Recupera la información de las pestañas de análisis y materiales del Excel de entrada.
         self.output_file = self.excel_path + '/' + output_filename
-        if os.path.isfile(self.output_file + '.txt'):
-            os.remove(self.output_file + '.txt')
-        file = open(self.output_file + '.txt', "x")
-        today_date = date.today()
+        if os.path.isfile(self.output_file + '.py'): # Creación del archivo de salida.
+            os.remove(self.output_file + '.py')
+        file = open(self.output_file + '.py', "x")
+        today_date = date.today() # Fecha de creación del archivo de entrada a ISAMI.
 
+        # Encabezado del archivo de entrada a ISAMI.
         file.writelines("########################\n")
         file.writelines("# ISAMI VERSION: 8.0.0 #\n")
         file.writelines("# ANALYSIS: LUG        #\n")
@@ -80,43 +83,22 @@ class Lug_generator():
         file.writelines("# Date: " + today_date.strftime("%d/%m/%Y") + "     #\n")
         file.writelines("######################\n")
 
+        # Incluye las primeras líneas de materiales en el archivo.
         for keys in self.material_data.keys():
-            campo1 = keys
-            campo2 = self.material_data[keys]["ISAMI Name"]
-            campo3 = self.material_data[keys]["CODE"]
-            campo4 = self.material_data[keys]["User/Referenced"]
-            file.writelines("MS.LoadMaterial("+"'"+ campo1 +"'" +"," + campo2 +"," + campo3 +"," + campo4 +")\n")
-
+            file.writelines("MS.LoadMaterial("+ "'" + keys + "'" + "," + self.material_data[keys]["ISAMI Name"] + ","
+                            + self.material_data[keys]["CODE"] + "," + self.material_data[keys]["User/Referenced"]
+                            +")\n")
         file.writelines(" \n")
 
-        cont = 1
-        for keys in self.analysis_data.keys():
-            campo1 = self.analysis_data[keys]["Standar Pin"]
-            campo2 = self.analysis_data[keys]["/Diameter"]
-            campo3 = self.analysis_data[keys]["/Material"]
-            campo4 = self.analysis_data[keys]["Standar Bush"]
-            campo5 = self.analysis_data[keys]["/BushExternalDiameter"]
-            campo6 = self.analysis_data[keys]["/BushMaterial"]
-            campo7 = self.analysis_data[keys]["/LugResultantForce"]
-            campo8 = self.analysis_data[keys]["/LugResultantAngle"]
-            campo9 = self.analysis_data[keys]["/LoadingRatio"] # REVIEW THIS!!
-            campo10 = self.analysis_data[keys]["/Width"]
-            campo11 = self.analysis_data[keys]["/Length"]
-            campo12 = self.analysis_data[keys]["/Thick"]
-            campo13 = self.analysis_data[keys]["/ThickUnstudied"]
-            campo14 = self.analysis_data[keys]["/PinOffsetX"]
-            campo15 = self.analysis_data[keys]["/PinOffsetY"]
-            campo16 = self.analysis_data[keys]["/SuperiorAngle"]
-            campo17 = self.analysis_data[keys]["/InferiorAngle"]
-            campo18 = self.analysis_data[keys]["/ShearType"]
-            campo19 = self.analysis_data[keys]["/StructureMaterial"]
-            campo20 = self.analysis_data[keys]["/Orientation_init"]
-
-            folder = ["Standar Pin","/Diameter","/Material","Standar Bush","Standar Bush","/BushExternalDiameter","/BushMaterial","/LugResultantForce",
-                      "/LugResultantAngle","/LoadingRatio","/Width","/Length","/Thick","/ThickUnstudied","/PinOffsetX","/PinOffsetY","/SuperiorAngle",
+        cont = 1 # Contador en caso de múltiples casos de estudio.
+        for keys in self.analysis_data.keys(): #Incluye la infromación de la pestaña análisis.
+            # Define las etiquetas de las entradas a escribir en el archivo de salido.
+            folder = ["Standar Pin","/Diameter","/Material","Standar Bush","Standar Bush","/BushExternalDiameter",
+                      "/BushMaterial","/LugResultantForce","/LugResultantAngle","/LoadingRatio","/Width","/Length",
+                      "/Thick","/ThickUnstudied","/PinOffsetX","/PinOffsetY","/SuperiorAngle",
                       "/InferiorAngle","/ShearType","/StructureMaterial","/Orientation_init"]
             dic_folder = {}
-            for i in folder:
+            for i in folder: # Comprueba si el valor es del tipo str y reemplaza el operador decimal.
                 value = self.analysis_data[keys][i]
                 if not isinstance(value,str):
                     value = str(self.analysis_data[keys][i]).replace('.', ',')
@@ -124,39 +106,40 @@ class Lug_generator():
                     pass
                 dic_folder.update({i:value})
 
+            # Creación de líneas correspondientes a DPines.
             file.writelines("MS.CreateObject('DPines" + str(cont) + "','AirbusEO_DPin',[\n"
             "['/CsmMbr_Name','S:DPin" + str(cont) + "'],\n"
             "['/CsmMbr_Uptodate','B:TRUE'],\n"
             "['/Diameter','CaesamQty_LENGTH:" + dic_folder["/Diameter"] + ";mm'],\n"
             "['/Material','AirbusEO_TMaterial:" + dic_folder["/Material"] + "'],\n"
-            "])\n\n\n")
-
+            "])\n \n\n")
+            # Creación de líneas correspondientes a DBushes.
             file.writelines("MS.CreateObject('DBushes" + str(cont) + "','AirbusEO_DBush',[\n"
             "['/CsmMbr_Name','S:D_Bush" + str(cont) + "'],\n"
-            "['/BushInternalDiameter','CaesamQty_LENGTH:" + dic_folder["/BushInternalDiameter"] + ";mm'],\n"
+            "['/BushInternalDiameter','CaesamQty_LENGTH:" + dic_folder["/Diameter"] + ";mm'],\n"
             "['/BushExternalDiameter','CaesamQty_LENGTH:" + dic_folder["/BushExternalDiameter"] + ";mm'],\n"
-            "['/BushMaterial','AirbusEO_TMaterial:" + campo6 + "'],\n"
-            "])\n\n")
-
+            "['/BushMaterial','AirbusEO_TMaterial:" + dic_folder["/BushMaterial"] + "'],\n"
+            "])\n \n")
+            # Creación de líneas correspondientes a Geom.
             file.writelines("MS.CreateObject('Geom" + str(cont) + "','AirbusEO_DLugGeometry',[\n"
             "['/CsmMbr_Name','S:Geom'],\n"
             "['/LugType','Enum_LugType:SIMPLE'],\n"
-            "['/Width','CaesamQty_LENGTH:" + str(campo10) + ";mm'],\n"
-            "['/Length','CaesamQty_LENGTH:" + str(campo11) + ";mm'],\n"
-            "['/Thick','CaesamQty_LENGTH:" + str(campo12) + ";mm'],\n"
-            "['/ThickUnstudied','CaesamQty_LENGTH:" + str(campo13) + ";mm'],\n"
+            "['/Width','CaesamQty_LENGTH:" + dic_folder["/Width"] + ";mm'],\n"
+            "['/Length','CaesamQty_LENGTH:" + dic_folder["/Length"] + ";mm'],\n"
+            "['/Thick','CaesamQty_LENGTH:" + dic_folder["/Thick"] + ";mm'],\n"
+            "['/ThickUnstudied','CaesamQty_LENGTH:" + dic_folder["/ThickUnstudied"] + ";mm'],\n"
             "['/LugPin','AirbusEO_DPin:DPines" + str(cont) + "'],\n"
             "['/LugBush','AirbusEO_DBush:DBushes" + str(cont) + "'],\n"
-            "['/PinOffsetX','CaesamQty_LENGTH:" + str(campo14) + ";mm'],\n"
-            "['/PinOffsetY','CaesamQty_LENGTH:" + str(campo15) + ";mm'],\n"
-            "['/SuperiorAngle','CaesamQty_PLANE_ANGLE:" + str(campo16) + ";deg'],\n"
-            "['/InferiorAngle','CaesamQty_PLANE_ANGLE:" + str(campo17) + ";deg'],\n"
+            "['/PinOffsetX','CaesamQty_LENGTH:" + dic_folder["/PinOffsetX"] + ";mm'],\n"
+            "['/PinOffsetY','CaesamQty_LENGTH:" + dic_folder["/PinOffsetY"] + ";mm'],\n"
+            "['/SuperiorAngle','CaesamQty_PLANE_ANGLE:" + dic_folder["/SuperiorAngle"] + ";deg'],\n"
+            "['/InferiorAngle','CaesamQty_PLANE_ANGLE:" + dic_folder["/InferiorAngle"] + ";deg'],\n"
             "['/NotchedLength','CaesamQty_LENGTH:20;mm'],\n"
-            "['/ShearType','Enum_ToggleShearType:" + campo18 + "'],\n"
-            "['/StructureMaterial','AirbusEO_TMaterial:" + campo19 + "'],\n"
-            "])\n\n")
-
-            file.writelines("MS.CreateObject('Loading" + str(cont) + "', 'AirbusEO_DLugLoading,[\n"
+            "['/ShearType','Enum_ToggleShearType:" + dic_folder["/ShearType"] + "'],\n"
+            "['/StructureMaterial','AirbusEO_TMaterial:" + dic_folder["/StructureMaterial"] + "'],\n"
+            "])\n \n")
+            # Creación de líneas correspondientes a Loading.
+            file.writelines("MS.CreateObject('Loading" + str(cont) + "','AirbusEO_DLugLoading',[\n"
             "['/CsmMbr_Name','S:Loading'],\n"
             "['/LoadingType','Enum_LoadingType:NO_COEFFICIENT'],\n"
             "['/LugForceLoadingType','Enum_TogglePHForceLoadingType:RESULTANT AND ANGLE'],\n"
@@ -165,28 +148,29 @@ class Lug_generator():
             "['/LugForceX','CaesamQty_FORCE:10000;N'],\n"
             "['/LugForceY','CaesamQty_FORCE:10000;N'],\n"
             "['/LugCoefficientResultantForce','D:100'],\n"
-            "['/LugResultantForce','CaesamQty_FORCE:" + str(campo7) + ";N'],\n"
-            "['/LugResultantAngle','CaesamQty_PLANE_ANGLE:" + str(campo8) + ";deg'],\n"
+            "['/LugResultantForce','CaesamQty_FORCE:" + dic_folder["/LugResultantForce"] + ";N'],\n"
+            "['/LugResultantAngle','CaesamQty_PLANE_ANGLE:" + dic_folder["/LugResultantAngle"] + ";deg'],\n"
             "['/NbParameters','I:32'],\n"
-            "['/LoadingRatio','D:" + str(campo9) + "'],\n"
+            "['/LoadingRatio','D:" + dic_folder["/LoadingRatio"] + "'],\n"
             "['/NbClasses','I:1'],\n"
             "['/Compression','Enum_ToggleCompression:Smin'],\n"
             "['/UserSmin','CaesamQty_PRESSURE:0;MPa'],\n"
             "['/PropagationComputation','CaesamEnum_YesNo:No'],\n"
             "['/MLPDesign','CaesamEnum_YesNo:No'],\n"
             "['/LoadRedistributionFactor','D:1']\n"
-            "]))\n\n")
-
+            "])\n \n")
+            # Creación de líneas correspondientes a Law.
             file.writelines("MS.CreateObject('Law" + str(cont) + "','AirbusEO_DFatigueLawGeoDependent',[\n"
             "['/CsmMbr_Name','S:Law'],\n"
             "['/IsCracked','S:No'],\n"
             "['/LawType','Enum_ToggleLawTypeGeoDependent:Fatigue Law'],\n"
             "['/DamageCalculationMethod','Enum_ToggleDamageCalculationMethod:LOCAL STRESS ANALYSIS'],\n"
             "['/FatigueLaw','Enum_ToggleFatigueLaw:AFI LAW'],\n"
-            "['/Orientation_init','Enum_Orientation:" + campo20 + "'],\n"
-                                                                                                                    "['/Configuration_init','S:Configuration:AFI/thickness:50-200'],\n"  # HAY QUE CAMBIAR ESTO
-                                                                                                                    "])\n\n")
-
+            "['/Orientation_init','Enum_Orientation:" + dic_folder["/Orientation_init"] + "'],\n"
+            "['/Configuration_init','S:" +
+                            self.material_data[dic_folder["/StructureMaterial"]]["Configuration"] + "'],\n"  
+            "])\n \n")
+            # Creación de líneas correspondientes a initiation_lug.
             file.writelines("MS.CreateStandaloneAnalysis('initiation_lug',None,[\n"
             "   '/CsmMbr_Name S:" + keys + "',\n"
             "   '/Geometry *AirbusEO_DLugGeometry:',\n"
@@ -196,43 +180,10 @@ class Lug_generator():
             "   '/FatigueLaw *AirbusEO_DFatigueLawGeoDependent:',\n"
             "   '/FatigueLaw/ReferencedObject AirbusEO_DFatigueLawGeoDependent:Law" + str(cont) + "',\n"
             "],\n"
-            "'" + keys + "')\n\n")
+            "'" + keys + "')\n \n")
+            cont = cont + 1 #Actualización del contador en caso de múltiples casos de estudio.
 
-            file.writelines("\n\n")
-
-
-            cont = cont + 1
-
+        file.writelines(" \n")
         file.writelines("MS.RunAllAnalysis()\n")
         file.writelines("MS.Save('" + output_filename +".czm')\n")
         file.close()
-
-    # def read_materials(self):
-    #     """
-    #     Función encargada de leer la pestaña de materiales en el libro Excel de entrada. Suministra un diccionario
-    #     de salida que contiene todos los materiales y sus características.
-    #
-    #     """
-    #     mat_sheet = self.book["Materials"]
-    #     initial_row, final_row = 5, mat_sheet.max_row
-    #     initial_column, final_column = 2, mat_sheet.max_column
-    #     self.mat_global = {}
-    #     for i in range(initial_row, final_row + 1):
-    #         mat_name = mat_sheet.cell(i, initial_column).value
-    #         aux_dict = {}
-    #         for j in range(initial_column, final_column + 1):
-    #             key = mat_sheet.cell(4, j).value
-    #             value = mat_sheet.cell(i, j).value
-    #             aux_dict.update({key: value})
-    #         self.mat_global.update({mat_name: aux_dict})
-    #     return self.mat_global
-    # # def write_output(self):
-    #
-    #     # f = open("myfile.txt", "x")
-    #     # f.writelines("########################\n")
-    #     # f.writelines("# ISAMI VERSION: 8.0.0 #\n")
-    #     # f.writelines("# ANALYSIS: LUG        #\n")
-    #     # f.writelines("# Mode: SAA            #\n")
-    #     # f.writelines("# Written by: ALTRAN   #\n")
-    #     # f.writelines("# Date: 25/01/14       #\n")
-    #     # f.writelines("########################\n")

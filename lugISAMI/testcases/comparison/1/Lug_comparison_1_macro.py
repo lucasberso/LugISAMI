@@ -39,7 +39,7 @@ MS.CreateObject('Geom3','AirbusEO_DLugGeometry',[
 ['/SuperiorAngle','CaesamQty_PLANE_ANGLE:0;deg'],
 ['/InferiorAngle','CaesamQty_PLANE_ANGLE:0;deg'],
 ['/NotchedLength','CaesamQty_LENGTH:20;mm'],
-['/ShearType','Enum_ToggleShearType:INTERNAL DOUBLE SHEAR'],
+['/ShearType','Enum_ToggleShearType:SINGLE SHEAR'],
 ['/StructureMaterial','AirbusEO_TMaterial:Al-7050-T7451'],
 ])
  
@@ -85,81 +85,6 @@ MS.CreateStandaloneAnalysis('initiation_lug',None,[
 ],
 'Rod_FR41_STR4_LHS_Upper')
  
-MS.CreateObject('DPines4','AirbusEO_DPin',[
-['/CsmMbr_Name','S:DPin4'],
-['/CsmMbr_Uptodate','B:TRUE'],
-['/Diameter','CaesamQty_LENGTH:15,875;mm'],
-['/Material','AirbusEO_TMaterial:Ti-6Al-4V'],
-])
- 
-
-MS.CreateObject('DBushes4','AirbusEO_DBush',[
-['/CsmMbr_Name','S:D_Bush4'],
-['/BushInternalDiameter','CaesamQty_LENGTH:15,875;mm'],
-['/BushExternalDiameter','CaesamQty_LENGTH:17,50568;mm'],
-['/BushMaterial','AirbusEO_TMaterial:Cres-A286'],
-])
- 
-MS.CreateObject('Geom4','AirbusEO_DLugGeometry',[
-['/CsmMbr_Name','S:Geom'],
-['/LugType','Enum_LugType:SIMPLE'],
-['/Width','CaesamQty_LENGTH:20;mm'],
-['/Length','CaesamQty_LENGTH:10;mm'],
-['/Thick','CaesamQty_LENGTH:30;mm'],
-['/ThickUnstudied','CaesamQty_LENGTH:15;mm'],
-['/LugPin','AirbusEO_DPin:DPines4'],
-['/LugBush','AirbusEO_DBush:DBushes4'],
-['/PinOffsetX','CaesamQty_LENGTH:1;mm'],
-['/PinOffsetY','CaesamQty_LENGTH:0;mm'],
-['/SuperiorAngle','CaesamQty_PLANE_ANGLE:1;deg'],
-['/InferiorAngle','CaesamQty_PLANE_ANGLE:1;deg'],
-['/NotchedLength','CaesamQty_LENGTH:20;mm'],
-['/ShearType','Enum_ToggleShearType:SINGLE SHEAR'],
-['/StructureMaterial','AirbusEO_TMaterial:Al-7175-T7351'],
-])
- 
-MS.CreateObject('Loading4','AirbusEO_DLugLoading',[
-['/CsmMbr_Name','S:Loading'],
-['/LoadingType','Enum_LoadingType:NO_COEFFICIENT'],
-['/LugForceLoadingType','Enum_TogglePHForceLoadingType:RESULTANT AND ANGLE'],
-['/LugCoefficientForceX','D:20'],
-['/LugCoefficientForceY','D:30'],
-['/LugForceX','CaesamQty_FORCE:10000;N'],
-['/LugForceY','CaesamQty_FORCE:10000;N'],
-['/LugCoefficientResultantForce','D:100'],
-['/LugResultantForce','CaesamQty_FORCE:500;N'],
-['/LugResultantAngle','CaesamQty_PLANE_ANGLE:50;deg'],
-['/NbParameters','I:32'],
-['/LoadingRatio','D:0,2'],
-['/NbClasses','I:1'],
-['/Compression','Enum_ToggleCompression:Smin'],
-['/UserSmin','CaesamQty_PRESSURE:0;MPa'],
-['/PropagationComputation','CaesamEnum_YesNo:No'],
-['/MLPDesign','CaesamEnum_YesNo:No'],
-['/LoadRedistributionFactor','D:1']
-])
- 
-MS.CreateObject('Law4','AirbusEO_DFatigueLawGeoDependent',[
-['/CsmMbr_Name','S:Law'],
-['/IsCracked','S:No'],
-['/LawType','Enum_ToggleLawTypeGeoDependent:Fatigue Law'],
-['/DamageCalculationMethod','Enum_ToggleDamageCalculationMethod:LOCAL STRESS ANALYSIS'],
-['/FatigueLaw','Enum_ToggleFatigueLaw:AFI LAW'],
-['/Orientation_init','Enum_Orientation:LT'],
-['/Configuration_init','S:Configuration:AFI/thickness:6-100'],
-])
- 
-MS.CreateStandaloneAnalysis('initiation_lug',None,[
-   '/CsmMbr_Name S:Rod_FR41_STR4_LHS_Lower',
-   '/Geometry *AirbusEO_DLugGeometry:',
-   '/Geometry/ReferencedObject AirbusEO_DLugGeometry:Geom4',
-   '/Loading *AirbusEO_DLugLoading:',
-   '/Loading/ReferencedObject AirbusEO_DLugLoading:Loading4',
-   '/FatigueLaw *AirbusEO_DFatigueLawGeoDependent:',
-   '/FatigueLaw/ReferencedObject AirbusEO_DFatigueLawGeoDependent:Law4',
-],
-'Rod_FR41_STR4_LHS_Lower')
- 
  
 MS.RunAllAnalysis()
-MS.Save('Lug_B3_2.czm')
+MS.Save('Lug_B3.czm')

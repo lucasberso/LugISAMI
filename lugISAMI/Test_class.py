@@ -1,16 +1,17 @@
 
 from Lug import Lug_generator
 from path import Path
-import os.path
 
-testcases_dir = Path(__file__).dirname()/"testcases"
+testcases_dir = Path(__file__).dirname()
 
 if __name__ == '__main__':
-
-    filename = 'Lug_manual.xlsm'
-    Lug = Lug_generator(filename, testcases_dir)
-    hola = Lug.read_input(initial_row = 4, initial_column = 1, header_row=3, name_sheet = 'Analysis')
-    hola2 = Lug.read_template()
-    hola3 = Lug.write_output(output_filename='tonto')
-    print('hola')
+    # Script para comprobar los datos obetidos por la librería LugISAMI.
+    filename = 'Lug_template.xlsm' # Nombre del archivo Excel con los datos de entrada.
+    Lug = Lug_generator(filename, testcases_dir) # Inicializa la librería con el archivo input y la ruta.
+    # Extrae los datos de la pestaña análisis.
+    analysis = Lug.read_input(initial_row = 4, initial_column = 1, header_row=3, name_sheet = 'Analysis')
+    # Extrae todos los datos del Excel de entrada.
+    dicts = Lug.read_template()
+    # Proporciona el archivo input de ISAMI.
+    Lug.write_output(output_filename='Result_test_class')
 
