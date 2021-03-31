@@ -16,30 +16,30 @@ from datetime import date
 class lugInput():
     """
     Clase desarrolada para trabajar con orejetas en ISAMI.
-    """
 
-    # ----------------------- Inicialización
-    def __init__(self, excel_filename, excel_path):
+    """
+    def __init__(self, filepath, filename):
         """
         Inicializa la ruta, el nombre del fichero y lee el archivo Excel proporcionado.
 
-        :str excel_filename: Nombre del fichero Excel de entrada.
-        :str excel_path: Ruta del fichero Excel de entrada.
+        filename: Nombre del fichero Excel de entrada.
+        filepath: Ruta del fichero Excel de entrada.
+
         """
-        self.excel_filename = excel_filename
-        self.excel_path = excel_path
-        self.input_file = excel_path + '/' + excel_filename
+        self.excel_filename = filename
+        self.excel_path = filepath
+        self.input_file = filepath + '/' + filename
         self.book = openpyxl.load_workbook(self.input_file, data_only=True)
 
     def read_input(self, initial_row=4, initial_column=2, header_row=3, name_sheet='Analysis'):
         """
         Obtiene de la hoja seleccionada por el usuario todos los datos encerrados por el rango suministrado.
 
-        :int initial_row: Fila inicial de comienzo los datos.
-        :int initial_column: Columna inicial de comienzo los datos.
-        :int header_row: Fila con el nombre de los campos a almacenar.
-        :int name_sheet: Nombre de la hoja de datos.
-        :return: Diccionario de salida con los datos extraidos de la hoja Excel.
+        initial_row: Fila inicial de comienzo los datos.
+        initial_column: Columna inicial de comienzo los datos.
+        header_row: Fila con el nombre de los campos a almacenar.
+        name_sheet: Nombre de la hoja de datos.
+
         """
         sheet = self.book[name_sheet]
         final_row = sheet.max_row
@@ -50,7 +50,7 @@ class lugInput():
             if name is None:
                 continue
             aux_dict = {}
-            for j in range(initial_column, final_column + 1):
+            for j in range(initial_column, final_column + 1): # TODO Eliminar columnas con None
                 key = sheet.cell(header_row, j).value
                 value = sheet.cell(i, j).value
                 aux_dict.update({key: value})
@@ -59,10 +59,11 @@ class lugInput():
 
     def read_template(self):
         """
-        Lee del archivo de entrada Excel los datos procedentes de las pestañas análisis y materiales.
+        Obtiene del archivo de entrada los datos procedentes de las pestañas análisis y materiales.
+
         """
-        self.analysis_data = self.read_input(initial_row = 4, initial_column = 1, header_row = 3, name_sheet='Analysis')
-        material_data = self.read_input(initial_row = 5, initial_column = 2, header_row = 4, name_sheet='Materials')
+        self.analysis_data = self.read_input(initial_row=4, initial_column=1, header_row=3, name_sheet='Analysis')
+        material_data = self.read_input(initial_row=5, initial_column=2, header_row=4, name_sheet='Materials')
         self.material_data = dict(sorted(material_data.items()))
 
     def write_output(self, output_filename):

@@ -15,22 +15,21 @@ from wrappers import extract_file
 
 class lugHTML():
     """
-    Clase desarrolada para trabajar con el html proporcionado por ISAMI.
-    """
+    Clase desarrollada para trabajar con el html proporcionado por ISAMI.
 
-    # ----------------------- Inicialización
+    """
     def __init__(self, filepath, filename):
         """
         Inicializa el archivo de entrada con nombre y ruta. Comprobación del tipo de fichero.
 
         filepath: Ruta del fichero de entrada.
         filename: Nombre del fichero de entrada.
-        """
 
+        """
         self.filepath, self.filename = filepath, filename
         self.input_file = self.filepath + '/' + self.filename # Ruta completa del archivo.
-        self.parsed_html = None
-        self.clean_filename, self.file_extension = os.path.splitext(self.input_file)
+        self.parsed_html = None # Información almacenada en el archivo html.
+        clean_filename, self.file_extension = os.path.splitext(self.input_file)
         if self.file_extension not in ('.html', '.czm'): # Comprueba si el tipo de archivo suministrado es adecuado.
             raise IOError('Extensión no soportada. Por favor, proporcione un archivo czm o html.')
 
@@ -38,8 +37,9 @@ class lugHTML():
         """
         Obtiene los datos almacenados en el fichero html. En caso de proporcionar un fichero czm, lo descomprime
         y localiza el correspondiente html.
-        """
 
+        """
+        self.html_path = None # Ruta del archivo html de lectura.
         if self.file_extension == '.czm': # Caso de fichero comprimido czm.
             folder_path = extract_file(self.filepath, self.filename) # Descomprime el archivo de entrada.
             for root, dirs, files in os.walk(folder_path): # Búsqueda del html almacenado dentro del czm.
@@ -57,11 +57,10 @@ class lugHTML():
     def find_kt(self):
         """
         Busca dentro del fichero html la información correspondiente a los factores de intensidad de esfuerzos.
-        """
 
+        """
         if not self.parsed_html: # Obtiene la información del archivo html en caso de no haberla obtenido previamente.
             self.extract_parse_html()
-
         tag = self.parsed_html.findAll('th') # Recupera las etiquetas tipo th del archivo html.
         kt_value = None
         for i in range(0, len(tag)): # Itera a lo largo de las etiquetas th.
