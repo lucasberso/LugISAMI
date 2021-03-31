@@ -1,5 +1,5 @@
 
-from Lug import Lug_generator
+from lugWriter import lugInput
 from path import Path
 
 def compare_txt(f1,f2):
@@ -32,7 +32,7 @@ def compare_1():
     testcases_dir = Path(__file__).dirname() / "testcases/comparison/1"
     filename = 'Lug_comparison_1_template.xlsm'
 
-    Lug = Lug_generator(filename, testcases_dir)
+    Lug = lugInput(filename, testcases_dir)
     Lug.write_output(output_filename='Lug_comparison_1_python')
 
     f1 = open(testcases_dir + "/" + "Lug_comparison_1_macro.py", "r")
@@ -49,7 +49,7 @@ def compare_2():
     testcases_dir = Path(__file__).dirname() / "testcases/comparison/2"
     filename = 'Lug_comparison_2_template.xlsm'
 
-    Lug = Lug_generator(filename, testcases_dir)
+    Lug = lugInput(filename, testcases_dir)
     Lug.write_output(output_filename='Lug_comparison_2_python')
 
     f1 = open(testcases_dir + "/" + "Lug_comparison_2_macro.py", "r")

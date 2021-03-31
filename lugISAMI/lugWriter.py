@@ -13,7 +13,7 @@ import openpyxl
 import os.path
 from datetime import date
 
-class Lug_generator():
+class lugInput():
     """
     Clase desarrolada para trabajar con orejetas en ISAMI.
     """
