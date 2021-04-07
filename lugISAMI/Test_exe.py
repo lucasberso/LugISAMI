@@ -8,17 +8,18 @@ window_main.option_add('*Font', '18')
 
 # file_name_var = tk.StringVar()
 
+#Función que llama al archivo que se desea leer
 def askfilename():
     global file_name
     window_main.filename = filedialog.askopenfilename()
     e1.insert(0, window_main.filename)
-    # file_name_var.set(file_name)
-    # return(file_name)
 
+#Función que llama al directorio donde se desea guardar la carpeta
 def askdirectory():
-    dir_path = filedialog.askdirectory()
-    e3.insert(0, window_main.filename)
-    return(dir_path)
+    global dir_path
+    window_main.dir_path = filedialog.askdirectory()
+    e3.insert(0, window_main.dir_path)
+
 
 
 gender = tk.IntVar()
@@ -54,6 +55,11 @@ bot1.place(x = 580, y = 125)
 
 bot3 = tk.Button(window_main, text = '...', command = askdirectory, height = 1, width = 2)
 bot3.place(x = 580, y = 225)
+
+
+bot4 = tk.Button(window_main, text = 'Generate') #FALTA METER EL COMMAND LLAMANDO A LO QUE QUERAMOS HACER
+bot4.place(x = 680, y = 325)
+
 
 window_main.mainloop()
 
