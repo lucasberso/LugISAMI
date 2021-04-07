@@ -12,6 +12,7 @@
 import os.path
 from bs4 import BeautifulSoup
 from wrappers import extract_file
+from wrappers import find_extension
 
 class lugHTML():
     """
@@ -28,31 +29,29 @@ class lugHTML():
         """
         self.filepath, self.filename = filepath, filename
         self.input_file = self.filepath + '/' + self.filename # Ruta completa del archivo.
-        self.parsed_html = None # Información almacenada en el archivo html.
+        self.parsed_html, self.html_path = None, None # Información almacenada en el archivo html y ruta.
         clean_filename, self.file_extension = os.path.splitext(self.input_file)
         if self.file_extension not in ('.html', '.czm'): # Comprueba si el tipo de archivo suministrado es adecuado.
             raise IOError('Extensión no soportada. Por favor, proporcione un archivo czm o html.')
 
-    def extract_parse_html(self):
+    def parse_html(self):
         """
         Obtiene los datos almacenados en el fichero html. En caso de proporcionar un fichero czm, lo descomprime
         y localiza el correspondiente html.
 
         """
-        self.html_path = None # Ruta del archivo html de lectura.
         if self.file_extension == '.czm': # Caso de fichero comprimido czm.
             folder_path = extract_file(self.filepath, self.filename) # Descomprime el archivo de entrada.
-            for root, dirs, files in os.walk(folder_path): # Búsqueda del html almacenado dentro del czm.
-                for name in files: # Bucle a lo largo de los archivos en los directorios.
-                    filename, file_extension = os.path.splitext(name)
-                    if file_extension == '.html': # Comprueba la extensión de cada archivo.
-                        self.html_path = os.path.join(root, name)
-            if self.html_path is None: # Error en caso de no encontrar un archivo html.
-                raise IOError('Archivo html no encontrado en la carpeta: %s' % folder_path)
-        else: # Caso con html proporcionado directamente.
-            self.html_path = self.filepath/self.filename
+            html_path = find_extension(folder_path, '.html') # Busca el html en el directorio de extracción.
+            if html_path:
+                self.html_path = html_path[0]
+        else: # Caso de html proporcionado directamente.
+            self.html_path = self.filepath + "/" + self.filename
+        if not self.html_path:
+            raise IOError('Archivo html no encontrado.')
         html_file = open(self.html_path, encoding="utf8") # Almacena los datos del html.
-        self.parsed_html = BeautifulSoup(html_file, "html.parser")
+        # self.parsed_html = BeautifulSoup(html_file, "html.parser")
+        self.parsed_html = BeautifulSoup(html_file, "lxml") # HAY QUE INSTALAR LXML
 
     def find_kt(self):
         """
@@ -60,7 +59,7 @@ class lugHTML():
 
         """
         if not self.parsed_html: # Obtiene la información del archivo html en caso de no haberla obtenido previamente.
-            self.extract_parse_html()
+            self.parse_html()
         tag = self.parsed_html.findAll('th') # Recupera las etiquetas tipo th del archivo html.
         kt_value = None
         for i in range(0, len(tag)): # Itera a lo largo de las etiquetas th.
@@ -69,3 +68,21 @@ class lugHTML():
         if kt_value is None: # Informa en caso de que no haya almacenado ningún valor de kt.
             print("Valor de Kt no encontrado.")
         return kt_value
+
+    def read_tables(self):
+        # De momento únicamente lee tabla donde las etiquetas están a la izquierda y el valor a la derecha. Tablas n x 2.
+        d, table_count = {}, 0
+        tables = self.parsed_html.findAll('table')
+        for table in tables:
+            lines = table.findAll('tr')
+            d_aux = {}
+            for line in lines:
+                if len(line.findAll()) > 2:
+                    continue
+                header, result = line.findAll()[0].string, line.findAll()[1].string
+                d_aux.update({header:result})
+            if d_aux:
+                d.update({table_count:d_aux})
+                table_count = table_count + 1
+        return d
+
