@@ -57,7 +57,7 @@ bot3 = tk.Button(window_main, text = '...', command = askdirectory, height = 1, 
 bot3.place(x = 580, y = 225)
 
 
-bot4 = tk.Button(window_main, text = 'Generate') #FALTA METER EL COMMAND LLAMANDO A LO QUE QUERAMOS HACER
+bot4 = tk.Button(window_main, text = 'Generate') #FALTA METER EL COMMAND  LLAMANDO A LO QUE QUERAMOS HACER
 bot4.place(x = 680, y = 325)
 
 
