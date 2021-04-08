@@ -16,56 +16,53 @@ from wrappers import find_extension
 
 class lugHTML():
     """
-    Clase desarrollada para trabajar con el html proporcionado por ISAMI.
+    Clase desarrollada para trabajar con el html o czm proporcionado por ISAMI.
 
     """
-    def __init__(self, filepath, filename):
+    def __init__(self, input_file):
         """
-        Inicializa el archivo de entrada con nombre y ruta. Comprobación del tipo de fichero.
+        Inicializa el archivo de entrada con nombre y ruta. Comprobación del tipo de fichero, debe ser czm o html.
 
-        filepath: Ruta del fichero de entrada.
-        filename: Nombre del fichero de entrada.
+        input_file: Ruta de entrada del archivo.
 
         """
-        self.filepath, self.filename = filepath, filename
-        self.input_file = self.filepath + '/' + self.filename # Ruta completa del archivo.
-        self.parsed_html, self.html_path = None, None # Información almacenada en el archivo html y ruta.
-        clean_filename, self.file_extension = os.path.splitext(self.input_file)
+        self.input_file = input_file
+        self.parsed_html, self.html_path, self.parsed_html_dic = None, [], {} # Información almacenada.
+        self.file_extension = os.path.splitext(self.input_file)[1]
+        self.filepath = os.path.dirname(self.input_file)
         if self.file_extension not in ('.html', '.czm'): # Comprueba si el tipo de archivo suministrado es adecuado.
             raise IOError('Extensión no soportada. Por favor, proporcione un archivo czm o html.')
 
     def parse_html(self):
         """
-        Obtiene los datos almacenados en el fichero html. En caso de proporcionar un fichero czm, lo descomprime
-        y localiza el correspondiente html.
+        Obtiene los datos almacenados en el fichero html o czm. En caso de proporcionar un fichero czm, lo descomprime
+        y localiza los correspondientes html.
 
         """
         if self.file_extension == '.czm': # Caso de fichero comprimido czm.
-            folder_path = extract_file(self.filepath, self.filename) # Descomprime el archivo de entrada.
-            html_path = find_extension(folder_path, '.html') # Busca el html en el directorio de extracción.
-            if html_path:
-                self.html_path = html_path[0]
+            folder_path = extract_file(self.input_file) # Descomprime el archivo de entrada.
+            self.html_path = find_extension(folder_path, '.html') # Busca el html en el directorio de extracción.
         else: # Caso de html proporcionado directamente.
-            self.html_path = self.filepath + "/" + self.filename
-        if not self.html_path:
+            self.html_path.append(self.input_file)
+        if not self.html_path: # En caso de que no exista ningún html.
             raise IOError('Archivo html no encontrado.')
-        html_file = open(self.html_path, encoding="utf8") # Almacena los datos del html.
-        # self.parsed_html = BeautifulSoup(html_file, "html.parser")
-        self.parsed_html = BeautifulSoup(html_file, "lxml") # HAY QUE INSTALAR LXML
+        for path in self.html_path: # Almacena cada uno de los html parseados en un diccionario.
+            html_file = open(path, encoding="utf8") # Almacena los datos del html.
+            parsed_html = BeautifulSoup(html_file, "lxml")  # Hay que instalar lxml.
+            self.parsed_html_dic.update({os.path.splitext(os.path.basename(path))[0]:parsed_html})
 
-    def find_kt(self):
+    def find_kt(self, html):
         """
-        Busca dentro del fichero html la información correspondiente a los factores de intensidad de esfuerzos.
+        Busca dentro del fichero html la información correspondiente al factor de intensidad de esfuerzos (SIF).
+
+        html: Debe proporcionarse el html previamente parseado.
 
         """
-        if not self.parsed_html: # Obtiene la información del archivo html en caso de no haberla obtenido previamente.
-            self.parse_html()
-        tag = self.parsed_html.findAll('th') # Recupera las etiquetas tipo th del archivo html.
-        kt_value = None
+        tag, kt_value = html.findAll('th'), None # Recupera las etiquetas tipo th del archivo html.
         for i in range(0, len(tag)): # Itera a lo largo de las etiquetas th.
             if tag[i].string[0:2] == 'Kt': # Busca la etiqueta th correspondiente al kt.
                 kt_value = float(tag[i].next_sibling.contents[0])
-        if kt_value is None: # Informa en caso de que no haya almacenado ningún valor de kt.
+        if kt_value is None: # Informa en caso de que no se haya almacenado ningún valor de kt.
             print("Valor de Kt no encontrado.")
         return kt_value
 
@@ -86,3 +83,22 @@ class lugHTML():
                 table_count = table_count + 1
         return d
 
+    def write_output(self, output_filename):
+        """
+        Escribe un fichero tipo txt con el nombre del caso de estudio y su correspondiente kt.
+
+        output_filename: Nombre del fichero de salida.
+
+        """
+        self.output_file = self.filepath + '/' + output_filename
+        if os.path.isfile(self.output_file + '.txt'):  # Creación del archivo txt de salida.
+            os.remove(self.output_file + '.txt')
+        file = open(self.output_file + '.txt', "x")
+
+        self.parse_html() # Obtiene los html de entrada.
+        for id in self.parsed_html_dic: # Escribe la salida en el txt con el nombre del caso y kt correspondiente.
+            header = id + "\n"
+            file.writelines(header)
+            kt = self.find_kt(self.parsed_html_dic[id])
+            file.writelines("Kt = " + str(kt) + "\n")
+        file.close()

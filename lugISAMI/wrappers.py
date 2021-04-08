@@ -13,19 +13,19 @@ import zipfile
 import os.path
 import shutil
 
-def extract_file(filepath, filename):
+def extract_file(input_file):
     """
     Extrae un archivo de entrada en una carpeta creada con su nombre + "_extracted".
     """
-    clean_filename, file_extension = os.path.splitext(filename)
-    extraction_path = filepath + '/' + clean_filename + '_extracted'
+    clean_filename, filename = os.path.splitext(input_file)[0], os.path.basename(input_file)
+    extraction_path = clean_filename + '_extracted'
     if os.path.exists(extraction_path): # Creación de la carpeta de extracción.
         print('Eliminada carpeta: %s' % extraction_path)
         shutil.rmtree(extraction_path)
 
-    with zipfile.ZipFile(filepath / filename, 'r') as z: # Descomprime el archivo de entrada en la nueva carpeta.
+    with zipfile.ZipFile(input_file, 'r') as z: # Descomprime el archivo de entrada en la nueva carpeta.
         z.extractall(extraction_path)
-    print('Se ha descomprimido %s en: %s' % (filename, extraction_path))
+    print('Se ha descomprimido %s en: %s' % (filename , extraction_path))
     return extraction_path # Proporciona la ruta donde se han extraido los ficheros.
 
 def find_extension(filepath, file_extension):

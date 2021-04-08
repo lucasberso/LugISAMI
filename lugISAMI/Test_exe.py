@@ -12,7 +12,9 @@ window_main.option_add('*Font', '18')
 def askfilename():
     global file_name
     window_main.filename = filedialog.askopenfilename()
+    e1.configure(state=tk.NORMAL)
     e1.insert(0, window_main.filename)
+    e1.configure(state=tk.DISABLED)
 
 #Función que llama al directorio donde se desea guardar la carpeta
 def askdirectory():
@@ -33,7 +35,7 @@ radiobutton_2.place(x = 10, y = 50)
 
 Label1 = tk.Label(window_main, text = "Input Filename")
 Label1.place(x = 10, y = 130)
-e1 = tk.Entry(window_main, width = 35, borderwidth = 5)
+e1 = tk.Entry(window_main, width = 35, borderwidth = 5, state='disabled')
 e1.place(x = 180, y = 130)
 
 
