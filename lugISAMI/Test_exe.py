@@ -106,4 +106,4 @@ bot5.place(x = 680, y = 10)
 
 window_main.mainloop()
 
-print("hola")
+print("Bye")
