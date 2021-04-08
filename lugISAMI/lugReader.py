@@ -66,10 +66,10 @@ class lugHTML():
             print("Valor de Kt no encontrado.")
         return kt_value
 
-    def read_tables(self):
+    def read_tables(self, html):
         # De momento únicamente lee tabla donde las etiquetas están a la izquierda y el valor a la derecha. Tablas n x 2.
         d, table_count = {}, 0
-        tables = self.parsed_html.findAll('table')
+        tables = html.findAll('table')
         for table in tables:
             lines = table.findAll('tr')
             d_aux = {}
@@ -97,8 +97,13 @@ class lugHTML():
 
         self.parse_html() # Obtiene los html de entrada.
         for id in self.parsed_html_dic: # Escribe la salida en el txt con el nombre del caso y kt correspondiente.
+            file.writelines('############\n')
             header = id + "\n"
             file.writelines(header)
+            tables = self.read_tables(self.parsed_html_dic[id])
+            info = tables[0]
+            for i in info:
+                file.writelines(i + " = " + str(info[i]) + "\n")
             kt = self.find_kt(self.parsed_html_dic[id])
-            file.writelines("Kt = " + str(kt) + "\n")
+            file.writelines(" Kt = " + str(kt) + "\n")
         file.close()
