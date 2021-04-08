@@ -1,6 +1,10 @@
 import tkinter as tk
 from tkinter import filedialog
 from lugReader import lugHTML
+from lugWriter import lugInput
+import tkinter.font as tkFont
+import os
+
 
 window_main = tk.Tk(className='Lug ISAMI')
 window_main.geometry('800x400')
@@ -13,6 +17,7 @@ def askfilename():
     global file_name
     window_main.file_name = filedialog.askopenfilename()
     e1.configure(state=tk.NORMAL)
+    e1.delete(0, "end")
     e1.insert(0, window_main.file_name)
     e1.configure(state=tk.DISABLED)
 
@@ -21,20 +26,35 @@ def askdirectory():
     global dir_path
     window_main.dir_path = filedialog.askdirectory()
     e3.configure(state=tk.NORMAL)
+    e3.delete(0, 'end')
     e3.insert(0, window_main.dir_path)
     e3.configure(state=tk.DISABLED)
+
 
 def generate():
     output_name = e2.get()
     file_name=e1.get()
     dir_path=e3.get()
     if gender.get() == 1:
-        print('HOLAAAAA')
+        ISAMI=lugInput(input_file=file_name)
+        ISAMI.write_output(output_path=dir_path, output_filename=output_name)
+        e4.configure(state=tk.NORMAL)
+        e4.delete(0, "end")
+        e4.insert(0,"The ISAMI file has been generated")
+        e4.configure(state=tk.DISABLED)
+
     elif gender.get()==2:
         HTML=lugHTML(input_file=file_name)
         HTML.write_output(output_path=dir_path, output_filename=output_name)
+        e4.configure(state=tk.NORMAL)
+        e4.delete(0, "end")
+        e4.insert(0, "The HTML file has been read: Kt has been extracted")
+        e4.configure(state=tk.DISABLED)
+        kt_info=os.path.join(dir_path,output_name)
+        os.system(kt_info+".txt")
 
-
+def open_help():
+    os.system("HELP.docx")
 
 gender = tk.IntVar()
 radiobutton_1 = tk.Radiobutton(window_main, text='Create ISAMI input', variable=gender, value=1)# .grid(row = 1, column = 1)
@@ -43,7 +63,7 @@ radiobutton_1.place(x = 10, y = 10)
 
 
 
-radiobutton_2 = tk.Radiobutton(window_main, text='Read HTML output file', variable=gender, value=2)
+radiobutton_2 = tk.Radiobutton(window_main, text='Read HTML/CZM output file', variable=gender, value=2)
 radiobutton_2.place(x = 10, y = 50)
 #radiobutton_2.pack(align = "w")
 
@@ -79,9 +99,11 @@ bot3.place(x = 580, y = 225)
 bot4 = tk.Button(window_main, text = 'Generate', command=generate) #FALTA METER EL COMMAND  LLAMANDO A LO QUE QUERAMOS HACER
 bot4.place(x = 680, y = 295)
 
-
+font_help=tkFont.Font(family="Arial", size=8)
+bot5 = tk.Button(window_main, text = 'HELP', command=open_help, font=font_help)
+bot5.place(x = 680, y = 10)
 
 
 window_main.mainloop()
 
-print("Hola")
+print("hola")
