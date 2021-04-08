@@ -22,8 +22,6 @@ def askdirectory():
     window_main.dir_path = filedialog.askdirectory()
     e3.insert(0, window_main.dir_path)
 
-
-
 gender = tk.IntVar()
 radiobutton_1 = tk.Radiobutton(window_main, text='Create ISAMI input', variable=gender, value=1)# .grid(row = 1, column = 1)
 radiobutton_1.place(x = 10, y = 10)

@@ -83,14 +83,14 @@ class lugHTML():
                 table_count = table_count + 1
         return d
 
-    def write_output(self, output_filename):
+    def write_output(self, output_path, output_filename):
         """
         Escribe un fichero tipo txt con el nombre del caso de estudio y su correspondiente kt.
 
         output_filename: Nombre del fichero de salida.
 
         """
-        self.output_file = self.filepath + '/' + output_filename
+        self.output_file = output_path + '/' + output_filename
         if os.path.isfile(self.output_file + '.txt'):  # Creación del archivo txt de salida.
             os.remove(self.output_file + '.txt')
         file = open(self.output_file + '.txt', "x")
