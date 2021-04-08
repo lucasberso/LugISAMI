@@ -69,31 +69,31 @@ radiobutton_2.place(x = 10, y = 50)
 
 Label1 = tk.Label(window_main, text = "Input Filename")
 Label1.place(x = 10, y = 130)
-e1 = tk.Entry(window_main, width = 35, borderwidth = 5, state='disabled')
+e1 = tk.Entry(window_main, width = 50, borderwidth = 5, state='disabled')
 e1.place(x = 180, y = 130)
 
 
 
 Label2 = tk.Label(window_main, text = "Output Filename")
 Label2.place(x = 10, y = 180)
-e2 = tk.Entry(window_main, width = 35, borderwidth = 5)
+e2 = tk.Entry(window_main, width = 50, borderwidth = 5)
 e2.place(x = 180, y = 180)
 
 
 Label3 = tk.Label(window_main, text = "Output directory")
 Label3.place(x = 10, y = 230)
-e3 = tk.Entry(window_main, width = 35, borderwidth = 5, state='disabled')
+e3 = tk.Entry(window_main, width = 50, borderwidth = 5, state='disabled')
 e3.place(x = 180, y = 230)
 
 e4= tk.Entry(window_main, width = 70, borderwidth = 1, state='disabled')
 e4.place(x = 10, y = 280, height=70)
 
 bot1 = tk.Button(window_main, text = '...', command = askfilename, height = 1, width = 2)
-bot1.place(x = 580, y = 125)
+bot1.place(x = 650, y = 125)
 
 
 bot3 = tk.Button(window_main, text = '...', command = askdirectory, height = 1, width = 2)
-bot3.place(x = 580, y = 225)
+bot3.place(x = 650, y = 225)
 
 
 bot4 = tk.Button(window_main, text = 'Generate', command=generate) #FALTA METER EL COMMAND  LLAMANDO A LO QUE QUERAMOS HACER
@@ -101,7 +101,7 @@ bot4.place(x = 680, y = 295)
 
 font_help=tkFont.Font(family="Arial", size=8)
 bot5 = tk.Button(window_main, text = 'HELP', command=open_help, font=font_help)
-bot5.place(x = 680, y = 10)
+bot5.place(x = 680, y = 20)
 
 
 window_main.mainloop()
