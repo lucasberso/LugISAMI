@@ -18,17 +18,14 @@ class lugInput():
     Clase desarrolada para trabajar con orejetas en ISAMI.
 
     """
-    def __init__(self, filepath, filename):
+    def __init__(self, input_file):
         """
         Inicializa la ruta, el nombre del fichero y lee el archivo Excel proporcionado.
 
-        filename: Nombre del fichero Excel de entrada.
-        filepath: Ruta del fichero Excel de entrada.
+        input_file: Ruta de entrada del archivo.
 
         """
-        self.excel_filename = filename
-        self.excel_path = filepath
-        self.input_file = filepath + '/' + filename
+        self.input_file = input_file
         self.book = openpyxl.load_workbook(self.input_file, data_only=True)
 
     def read_input(self, initial_row=4, initial_column=2, header_row=3, name_sheet='Analysis'):
@@ -66,10 +63,10 @@ class lugInput():
         material_data = self.read_input(initial_row=5, initial_column=2, header_row=4, name_sheet='Materials')
         self.material_data = dict(sorted(material_data.items()))
 
-    def write_output(self, output_filename):
+    def write_output(self, output_path, output_filename):
 
         self.read_template() # Recupera la información de las pestañas de análisis y materiales del Excel de entrada.
-        self.output_file = self.excel_path + '/' + output_filename
+        self.output_file = output_path + '/' + output_filename
         if os.path.isfile(self.output_file + '.py'): # Creación del archivo de salida.
             os.remove(self.output_file + '.py')
         file = open(self.output_file + '.py', "x")
