@@ -18,7 +18,7 @@ class run_GUI:
         self.case_create = tk.Radiobutton(self.master, text='Create ISAMI input', variable=self.case, value=1)
         self.case_create.grid(row = 1, column = 1, padx = 10, pady = 10)
         self.case_read = tk.Radiobutton(self.master, text='Read HTML or CZM', variable=self.case, value=2)
-        self.case_read.grid(row=1, column=2, padx = 10, pady = 10)
+        self.case_read.grid(row=1, column=2, padx = 10, pady = 10 )
 
         #Boton de ayuda
         self.help = tk.Button(self.master, text="How It Works", command=self.open_help)
