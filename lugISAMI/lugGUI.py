@@ -38,6 +38,8 @@ class run_GUI:
         self.scrollbar.config(command=self.output_print.yview)
         self.scrollbar.grid(row=6, column=2, sticky=tk.N + tk.S + tk.W, padx = 10)
 
+        self.label_version = tk.Label(self.master, text="v1.0")
+        self.label_version.grid(row=0, column=2)
 
     def askfilename(self, entry):
 
@@ -83,7 +85,7 @@ class run_GUI:
         self.output_print.delete(1.0, tk.END)
 
         for i in self.entry_dic.keys():
-            warning = self.check_empty(self.entry_dic[i].get(), i)
+            warning = self.check_empty(self.entry_dic[i], i)
             if warning:
                 self.warning_print = self.warning_print + warning + "\n"
 
@@ -94,7 +96,6 @@ class run_GUI:
         output_name = self.entry_dic['output_name'].get()
 
         if self.warning_print == "":
-
             if self.case.get() == 1:
                 try:
                     ISAMI = lugInput(input_file=file_name)
@@ -111,10 +112,11 @@ class run_GUI:
                     self.write_in_txt("The HTML file has been read: Kt has been extracted.",self.output_print)
                 except:
                     self.write_in_txt("Error: HTML or CZM file not compatible.", self.output_print)
-
             else:
+                self.output_print.configure(state='normal')
                 self.output_print.delete(1.0, tk.END)
                 self.output_print.insert(tk.END, "Error: Select one of the program options.")
+                self.output_print.configure(state='disabled')
 
         self.warning_print = ""
 
@@ -126,8 +128,8 @@ class run_GUI:
 
     def check_empty(self, input, field):
         warning = ""
-        if not input:
-            self.write_in_txt("Error: The %s field is empty.", self.output_print)
+        if not input.get():
+            warning = "Error: %s has not been selected." % (field.replace("_"," "))
         return warning
 
 if __name__ == '__main__':
