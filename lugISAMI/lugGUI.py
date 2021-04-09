@@ -3,13 +3,13 @@ from tkinter import filedialog
 import functools
 from lugReader import lugHTML
 from lugWriter import lugInput
-
+import os
 
 class run_GUI:
 
     def __init__(self, master):
         self.master = master
-        self.master.title("Hola")
+        self.master.title("ISAMI LUG")
         self.master.resizable(False, False)
         self.master.update()
 
@@ -19,6 +19,10 @@ class run_GUI:
         self.case_create.grid(row = 1, column = 1, padx = 10, pady = 10)
         self.case_read = tk.Radiobutton(self.master, text='Read HTML or CZM', variable=self.case, value=2)
         self.case_read.grid(row=1, column=2, padx = 10, pady = 10)
+
+        #Boton de ayuda
+        self.help = tk.Button(self.master, text="How It Works", command=self.open_help)
+        self.help.grid(row=1, column=3, padx=10, pady = 10)
 
         # Bloques de entrada
         self.label_dic, self.button_dic, self.entry_dic  = {}, {}, {}
@@ -105,6 +109,9 @@ class run_GUI:
                 self.output_print.insert(tk.END, "Select one of the given options.")
 
         self.warning_print = ""
+
+    def open_help(self):
+        os.system("HELP.docx")
 
     def check_empty(self, input, field):
         warning = None
