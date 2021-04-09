@@ -9,7 +9,7 @@ class run_GUI:
 
     def __init__(self, master):
         self.master = master
-        self.master.title("ISAMI LUG")
+        self.master.title("ISAMI LUG V1.0")
         self.master.resizable(False, False)
         self.master.update()
 
@@ -22,7 +22,7 @@ class run_GUI:
 
         #Boton de ayuda
         self.help = tk.Button(self.master, text="How It Works", command=self.open_help)
-        self.help.grid(row=1, column=3, padx=10, pady = 10)
+        self.help.grid(row=1, column=1, padx=10, pady = 10)
 
         # Bloques de entrada
         self.label_dic, self.button_dic, self.entry_dic  = {}, {}, {}
@@ -41,9 +41,6 @@ class run_GUI:
         self.output_print.grid(row=6, column=0, columnspan=2, sticky=tk.W + tk.E, padx = 10, pady = (10,20))
         self.scrollbar.config(command=self.output_print.yview)
         self.scrollbar.grid(row=6, column=2, sticky=tk.N + tk.S + tk.W, padx = 10)
-
-        self.label_version = tk.Label(self.master, text="v1.0")
-        self.label_version.grid(row=0, column=2)
 
     def askfilename(self, entry):
 
