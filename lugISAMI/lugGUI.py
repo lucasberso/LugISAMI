@@ -9,7 +9,7 @@ class run_GUI:
 
     def __init__(self, master):
         self.master = master
-        self.master.title("Hola")
+        self.master.title("lugISAMI")
         self.master.resizable(False, False)
         self.master.update()
 
