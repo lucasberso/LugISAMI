@@ -185,3 +185,12 @@ class lugInput():
         file.writelines("MS.RunAllAnalysis()\n")
         file.writelines("MS.Save('" + output_filename +".czm')\n")
         file.close()
+
+    def write_bach(self, output_path, output_filename):
+        self.output_file = output_path + '/' + output_filename
+        if os.path.isfile(self.output_file + '_bach.sh'):  # Creación del archivo de salida.
+            os.remove(self.output_file + '_bach.sh')
+        file = open(self.output_file + '_bach.sh', "x")
+        file.writelines("#!/bin/bash\n")
+        file.writelines("/CAE/ISAMI/v11.1.0/bin/launchIA.ksh ksh -application isami_derivatives -python " + output_filename + ".py")
+        file.close()

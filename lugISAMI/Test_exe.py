@@ -55,7 +55,7 @@ def generate():
         os.system(kt_info+".txt")
 
 def open_help():
-    os.system("HELP.docx")
+    os.system("HELP.pdf")
 
 gender = tk.IntVar()
 radiobutton_1 = tk.Radiobutton(window_main, text='Create ISAMI input', variable=gender, value=1)# .grid(row = 1, column = 1)

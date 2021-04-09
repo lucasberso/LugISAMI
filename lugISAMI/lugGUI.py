@@ -99,6 +99,7 @@ class run_GUI:
                 try:
                     ISAMI = lugInput(input_file=file_name)
                     ISAMI.write_output(output_path=dir_path, output_filename=output_name)
+                    ISAMI.write_bach(output_path=dir_path, output_filename=output_name)
                     self.write_in_txt("The ISAMI file has been generated.", self.output_print)
                 except:
                     self.write_in_txt("Error: ISAMI input file not compatible.", self.output_print)
