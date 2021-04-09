@@ -1,7 +1,7 @@
 
 from path import Path
 from lugReader import lugHTML
-from wrappers import find_extension
+
 
 testcases_dir = Path(__file__).dirname()+"/testcases"
 
