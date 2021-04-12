@@ -22,7 +22,7 @@ class run_GUI:
         self.case_read.grid(row=1, column=0, padx = 10, pady = 0, sticky=tk.W)
 
         # Boton de ayuda
-        self.help = tk.Button(self.master, text="README", command=self.open_help)
+        self.help = tk.Button(self.master, text="HELP", command=self.open_help)
         self.help.grid(row=1, column=1, padx=10, pady = 10)
 
         # Bloques de entrada
@@ -125,7 +125,7 @@ class run_GUI:
 
     def open_help(self):
         try:
-            os.system("HELP.docx")
+            os.system("LugISAMI_Help.pdf")
         except:
             self.write_in_txt("Error: Couldn't open the README file.", self.output_print)
 
