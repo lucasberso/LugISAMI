@@ -21,9 +21,9 @@ class run_GUI:
         self.case_read = tk.Radiobutton(self.master, text='Read HTML or CZM', variable=self.case, value=2)
         self.case_read.grid(row=1, column=0, padx = 10, pady = 0, sticky=tk.W)
 
-        #Boton de ayuda
-        # self.help = tk.Button(self.master, text="How It Works", command=self.open_help)
-        # self.help.grid(row=1, column=1, padx=10, pady = 10)
+        # Boton de ayuda
+        self.help = tk.Button(self.master, text="README", command=self.open_help)
+        self.help.grid(row=1, column=1, padx=10, pady = 10)
 
         # Bloques de entrada
         self.label_dic, self.button_dic, self.entry_dic  = {}, {}, {}
@@ -123,8 +123,11 @@ class run_GUI:
 
         self.warning_print = ""
 
-    # def open_help(self):
-    #     os.system("HELP.txt")
+    def open_help(self):
+        try:
+            os.system("HELP.docx")
+        except:
+            self.write_in_txt("Error: Couldn't open the README file.", self.output_print)
 
     def write_in_txt(self, txt, object):
         object.configure(state='normal')
