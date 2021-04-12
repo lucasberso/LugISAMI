@@ -9,7 +9,7 @@
 # Copyright (c) 2021, Altran
 #
 
-import os.path
+import os
 from bs4 import BeautifulSoup
 from wrappers import extract_file
 from wrappers import find_extension

@@ -9,7 +9,7 @@
 # Copyright (c) 2021, Altran
 #
 
-import openpyxl
+from openpyxl import load_workbook
 import os.path
 from datetime import date
 
@@ -26,7 +26,7 @@ class lugInput():
 
         """
         self.input_file = input_file
-        self.book = openpyxl.load_workbook(self.input_file, data_only=True)
+        self.book = load_workbook(self.input_file, data_only=True)
 
     def read_input(self, initial_row=4, initial_column=2, header_row=3, name_sheet='Analysis'):
         """
@@ -64,7 +64,13 @@ class lugInput():
         self.material_data = dict(sorted(material_data.items()))
 
     def write_output(self, output_path, output_filename):
+        """
+        Escribe el archivo de entrada a ISAMI una vez obtenida la información de entrada.
 
+        output_path: Ruta del archivo de salida.
+        output_filename: Nombre del archivo de salida.
+
+        """
         self.read_template() # Recupera la información de las pestañas de análisis y materiales del Excel de entrada.
         self.output_file = output_path + '/' + output_filename
         if os.path.isfile(self.output_file + '.py'): # Creación del archivo de salida.
@@ -187,6 +193,13 @@ class lugInput():
         file.close()
 
     def write_bach(self, output_path, output_filename):
+        """
+        Escribe el archivo para poder invocar ISAMI en modo batch.
+
+        output_path: Ruta del archivo de salida.
+        output_filename: Nombre del archivo de salida.
+
+        """
         self.output_file = output_path + '/' + output_filename
         if os.path.isfile(self.output_file + '_bach.sh'):  # Creación del archivo de salida.
             os.remove(self.output_file + '_bach.sh')

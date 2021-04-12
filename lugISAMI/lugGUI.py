@@ -1,6 +1,7 @@
+
 import tkinter as tk
 from tkinter import filedialog
-import functools
+from functools import partial
 from lugReader import lugHTML
 from lugWriter import lugInput
 import os
@@ -21,8 +22,8 @@ class run_GUI:
         self.case_read.grid(row=1, column=0, padx = 10, pady = 0, sticky=tk.W)
 
         #Boton de ayuda
-        self.help = tk.Button(self.master, text="How It Works", command=self.open_help)
-        self.help.grid(row=1, column=1, padx=10, pady = 10)
+        # self.help = tk.Button(self.master, text="How It Works", command=self.open_help)
+        # self.help.grid(row=1, column=1, padx=10, pady = 10)
 
         # Bloques de entrada
         self.label_dic, self.button_dic, self.entry_dic  = {}, {}, {}
@@ -38,9 +39,13 @@ class run_GUI:
         # Texto de salida y barra
         self.scrollbar = tk.Scrollbar(orient="vertical")
         self.output_print = tk.Text(self.master, yscrollcommand=self.scrollbar.set,  height=3, width = 10)
+        self.output_print.configure(state='disabled')
         self.output_print.grid(row=6, column=0, columnspan=2, sticky=tk.W + tk.E, padx = 10, pady = (10,20))
         self.scrollbar.config(command=self.output_print.yview)
         self.scrollbar.grid(row=6, column=2, sticky=tk.N + tk.S + tk.W, padx = 10)
+
+        self.label_version = tk.Label(self.master, text="© Capgemini Engineering")
+        self.label_version.grid(row=7, column=0)
 
     def askfilename(self, entry):
 
@@ -64,11 +69,11 @@ class run_GUI:
         label.grid(row=row, column=column, sticky=tk.W, padx = 10)
         self.label_dic.update({id:label})
         if type == 'file':
-            button = tk.Button(self.master, text="...", command=functools.partial(self.askfilename, entry=id))
+            button = tk.Button(self.master, text="...", command=partial(self.askfilename, entry=id))
             button.grid(row=row, column=column + 2, sticky=tk.W, padx = 10)
             self.button_dic.update({id:button})
         elif type == 'folder':
-            button = tk.Button(self.master, text="...", command=functools.partial(self.askdirectory, entry=id))
+            button = tk.Button(self.master, text="...", command=partial(self.askdirectory, entry=id))
             button.grid(row=row, column=column + 2, sticky=tk.W, padx = 10)
             self.button_dic.update({id:button})
         if type == 'entry':
@@ -114,15 +119,12 @@ class run_GUI:
                 except:
                     self.write_in_txt("Error: HTML or CZM file not compatible.", self.output_print)
             else:
-                self.output_print.configure(state='normal')
-                self.output_print.delete(1.0, tk.END)
-                self.output_print.insert(tk.END, "Error: Select one of the program options.")
-                self.output_print.configure(state='disabled')
+                self.write_in_txt("Error: Select one of the program options.", self.output_print)
 
         self.warning_print = ""
 
-    def open_help(self):
-        os.system("HELP.docx")
+    # def open_help(self):
+    #     os.system("HELP.txt")
 
     def write_in_txt(self, txt, object):
         object.configure(state='normal')
