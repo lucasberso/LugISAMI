@@ -6,7 +6,7 @@
 # Héctor Dionisio,
 # Javier Vela
 #
-# Copyright (c) 2021, Altran
+# Copyright (c) 2021, Capgemini Engineering
 #
 
 import os

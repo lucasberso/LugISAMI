@@ -6,12 +6,13 @@
 # Héctor Dionisio,
 # Javier Vela
 #
-# Copyright (c) 2021, Altran
+# Copyright (c) 2021, Capgemini Engineering
 #
 
 from openpyxl import load_workbook
 import os.path
 from datetime import date
+from wrappers import read_sheet
 
 class lugInput():
     """
@@ -27,41 +28,17 @@ class lugInput():
         """
         self.input_file = input_file
         self.book = load_workbook(self.input_file, data_only=True)
-
-    def read_input(self, initial_row=4, initial_column=2, header_row=3, name_sheet='Analysis'):
-        """
-        Obtiene de la hoja seleccionada por el usuario todos los datos encerrados por el rango suministrado.
-
-        initial_row: Fila inicial de comienzo los datos.
-        initial_column: Columna inicial de comienzo los datos.
-        header_row: Fila con el nombre de los campos a almacenar.
-        name_sheet: Nombre de la hoja de datos.
-
-        """
-        sheet = self.book[name_sheet]
-        final_row = sheet.max_row
-        final_column = sheet.max_column
-        input_global = {}
-        for i in range(initial_row, final_row + 1):
-            name = sheet.cell(i, initial_column).value
-            if name is None:
-                continue
-            aux_dict = {}
-            for j in range(initial_column, final_column + 1): # TODO Eliminar columnas con None
-                key = sheet.cell(header_row, j).value
-                value = sheet.cell(i, j).value
-                aux_dict.update({key: value})
-            input_global.update({name: aux_dict})
-        return input_global
+        self.analysis_data, self.material_data = {}, {}
+        self.output_file = None
 
     def read_template(self):
         """
         Obtiene del archivo de entrada los datos procedentes de las pestañas análisis y materiales.
 
         """
-        self.analysis_data = self.read_input(initial_row=4, initial_column=1, header_row=3, name_sheet='Analysis')
-        material_data = self.read_input(initial_row=5, initial_column=2, header_row=4, name_sheet='Materials')
-        self.material_data = dict(sorted(material_data.items()))
+        self.analysis_data =read_sheet(initial_row=4, initial_column=1, header_row=3, name_sheet='Analysis', book=self.book)
+        material_data = read_sheet(initial_row=4, initial_column=1, header_row=3, name_sheet='Materials', book=self.book)
+        self.material_data = dict(sorted(material_data.items())) # Ordena el diccionario de materiales.
 
     def write_output(self, output_path, output_filename):
         """
@@ -105,7 +82,7 @@ class lugInput():
             for i in folder: # Comprueba si el valor es del tipo str y reemplaza el operador decimal.
                 value = self.analysis_data[keys][i]
                 if not isinstance(value,str):
-                    value = str(self.analysis_data[keys][i]).replace('.', ',')
+                    value = str(self.analysis_data[keys][i]) #.replace('.', ',')
                 else:
                     pass
                 dic_folder.update({i:value})
@@ -117,6 +94,7 @@ class lugInput():
             "['/Diameter','CaesamQty_LENGTH:" + dic_folder["/Diameter"] + ";mm'],\n"
             "['/Material','AirbusEO_TMaterial:" + dic_folder["/Material"] + "'],\n"
             "])\n \n\n")
+
             # Creación de líneas correspondientes a DBushes.
             file.writelines("MS.CreateObject('DBushes" + str(cont) + "','AirbusEO_DBush',[\n"
             "['/CsmMbr_Name','S:D_Bush" + str(cont) + "'],\n"
@@ -124,6 +102,7 @@ class lugInput():
             "['/BushExternalDiameter','CaesamQty_LENGTH:" + dic_folder["/BushExternalDiameter"] + ";mm'],\n"
             "['/BushMaterial','AirbusEO_TMaterial:" + dic_folder["/BushMaterial"] + "'],\n"
             "])\n \n")
+
             # Creación de líneas correspondientes a Geom.
             file.writelines("MS.CreateObject('Geom" + str(cont) + "','AirbusEO_DLugGeometry',[\n"
             "['/CsmMbr_Name','S:Geom'],\n"
@@ -142,6 +121,7 @@ class lugInput():
             "['/ShearType','Enum_ToggleShearType:" + dic_folder["/ShearType"] + "'],\n"
             "['/StructureMaterial','AirbusEO_TMaterial:" + dic_folder["/StructureMaterial"] + "'],\n"
             "])\n \n")
+
             # Creación de líneas correspondientes a Loading.
             file.writelines("MS.CreateObject('Loading" + str(cont) + "','AirbusEO_DLugLoading',[\n"
             "['/CsmMbr_Name','S:Loading'],\n"
@@ -163,6 +143,7 @@ class lugInput():
             "['/MLPDesign','CaesamEnum_YesNo:No'],\n"
             "['/LoadRedistributionFactor','D:1']\n"
             "])\n \n")
+
             # Creación de líneas correspondientes a Law.
             file.writelines("MS.CreateObject('Law" + str(cont) + "','AirbusEO_DFatigueLawGeoDependent',[\n"
             "['/CsmMbr_Name','S:Law'],\n"
@@ -189,7 +170,7 @@ class lugInput():
 
         file.writelines(" \n")
         file.writelines("MS.RunAllAnalysis()\n")
-        file.writelines("MS.Save('" + output_filename +".czm')\n")
+        file.writelines("MS.Save('" + output_filename +".czm')\n") # Asigna el nombre del archivo CZM de salida.
         file.close()
 
     def write_bach(self, output_path, output_filename):

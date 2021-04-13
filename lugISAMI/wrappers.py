@@ -6,12 +6,12 @@
 # Héctor Dionisio,
 # Javier Vela
 #
-# Copyright (c) 2021, Altran
+# Copyright (c) 2021, Capgemini Engineering
 #
 
-import zipfile
+from zipfile import ZipFile
 import os.path
-import shutil
+from shutil import rmtree
 
 def extract_file(input_file):
     """
@@ -21,9 +21,9 @@ def extract_file(input_file):
     extraction_path = clean_filename + '_extracted'
     if os.path.exists(extraction_path): # Creación de la carpeta de extracción.
         print('Eliminada carpeta: %s' % extraction_path)
-        shutil.rmtree(extraction_path)
+        rmtree(extraction_path)
 
-    with zipfile.ZipFile(input_file, 'r') as z: # Descomprime el archivo de entrada en la nueva carpeta.
+    with ZipFile(input_file, 'r') as z: # Descomprime el archivo de entrada en la nueva carpeta.
         z.extractall(extraction_path)
     print('Se ha descomprimido %s en: %s' % (filename , extraction_path))
     return extraction_path # Proporciona la ruta donde se han extraido los ficheros.
@@ -41,3 +41,31 @@ def find_extension(filepath, file_extension):
     print('%d archivo/s con extensión %s encontrado/s en la carpeta: %s' % (len(out_path), file_extension, filepath))
     if out_path: # Proporciona la lista de rutas en caso de encontrar archivos con la misma extensión.
         return out_path
+
+def read_sheet(initial_row, initial_column, header_row, name_sheet, book):
+    """
+    Obtiene de la hoja seleccionada por el usuario todos los datos encerrados por el rango de datos.
+
+    initial_row: Fila inicial de comienzo los datos.
+    initial_column: Columna inicial de comienzo los datos.
+    header_row: Fila con el nombre de los campos a almacenar.
+    name_sheet: Nombre de la hoja de datos.
+
+    """
+    sheet = book[name_sheet]
+    final_row = sheet.max_row
+    final_column = sheet.max_column
+    input_global = {}
+    for i in range(initial_row, final_row + 1):
+        name = sheet.cell(i, initial_column).value
+        if name is None: # Se salta las filas vacías.
+            continue
+        aux_dict = {}
+        for j in range(initial_column, final_column + 1):
+            if sheet.cell(header_row, j).value is None: # Se salta las columnas vacías.
+                continue
+            key = sheet.cell(header_row, j).value
+            value = sheet.cell(i, j).value
+            aux_dict.update({key: value})
+        input_global.update({name: aux_dict})
+    return input_global

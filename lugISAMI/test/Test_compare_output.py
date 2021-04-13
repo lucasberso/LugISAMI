@@ -30,13 +30,13 @@ def compare_1():
 
     """
     testcases_dir = Path(__file__).dirname() / "testcases/comparison/1"
-    filename = 'Lug_comparison_1_template.xlsm'
+    # filename = 'Lug_comparison_1_template.xlsm'
 
-    Lug = lugInput(testcases_dir, filename)
-    Lug.write_output(output_filename='Lug_comparison_1_python')
+    # Lug = lugInput(testcases_dir + "/" + filename)
+    # Lug.write_output(testcases_dir, 'Lug_comparison_1_python')
 
-    f1 = open(testcases_dir + "/" + "Lug_comparison_1_macro.py", "r")
-    f2 = open(testcases_dir + "/" + "Lug_comparison_1_python.py", "r")
+    f1 = open(testcases_dir + "/" + "Test_1.py", "r")
+    f2 = open(testcases_dir + "/" + "Test_2.py", "r")
 
     compare_txt(f1, f2)
 
@@ -76,6 +76,6 @@ def compare_3():
 
 if __name__ == '__main__':
 
-    # compare_1()
+    compare_1()
     # compare_2()
-    compare_3()
+    # compare_3()
