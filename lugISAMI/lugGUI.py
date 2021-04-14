@@ -23,7 +23,7 @@ class run_GUI:
     """
     def __init__(self, master):
         """
-        Inicializa la interfaz y establede la organización de objetos.
+        Inicializa la interfaz y establece la organización de objetos.
 
         """
         self.master = master

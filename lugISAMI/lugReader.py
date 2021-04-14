@@ -31,7 +31,7 @@ class lugHTML():
         self.file_extension = os.path.splitext(self.input_file)[1]
         self.filepath = os.path.dirname(self.input_file)
         if self.file_extension not in ('.html', '.czm'): # Comprueba si el tipo de archivo suministrado es adecuado.
-            raise IOError('Extensión no soportada. Por favor, proporcione un archivo czm o html.')
+            raise IOError('File not supported. Please, provide a czm or html file.')
 
     def parse_html(self):
         """
@@ -45,7 +45,7 @@ class lugHTML():
         else: # Caso de html proporcionado directamente.
             self.html_path.append(self.input_file)
         if not self.html_path: # En caso de que no exista ningún html.
-            raise IOError('Archivo html no encontrado.')
+            raise IOError('html file not found.')
         for path in self.html_path: # Almacena cada uno de los html parseados en un diccionario.
             html_file = open(path, encoding="utf8") # Almacena los datos del html.
             parsed_html = BeautifulSoup(html_file, "lxml")  # Hay que instalar lxml.
@@ -63,7 +63,7 @@ class lugHTML():
             if tag[i].string[0:2] == 'Kt': # Busca la etiqueta th correspondiente al kt.
                 kt_value = float(tag[i].next_sibling.contents[0])
         if kt_value is None: # Informa en caso de que no se haya almacenado ningún valor de kt.
-            print("Valor de Kt no encontrado.")
+            print("Not found Kt value.")
         return kt_value
 
     def read_tables(self, html):
@@ -97,9 +97,10 @@ class lugHTML():
 
         self.parse_html() # Obtiene los html de entrada.
         for id in self.parsed_html_dic: # Escribe la salida en el txt con el nombre del caso y kt correspondiente.
-            file.writelines('############\n')
+            file.writelines('-------------------\n')
             header = id + "\n"
             file.writelines(header)
+            file.writelines('-------------------\n')
             tables = self.read_tables(self.parsed_html_dic[id])
             info = tables[0]
             for i in info:

@@ -20,12 +20,12 @@ def extract_file(input_file):
     clean_filename, filename = os.path.splitext(input_file)[0], os.path.basename(input_file)
     extraction_path = clean_filename + '_extracted'
     if os.path.exists(extraction_path): # Creación de la carpeta de extracción.
-        print('Eliminada carpeta: %s' % extraction_path)
+        print('Deleted folder: %s' % extraction_path)
         rmtree(extraction_path)
 
     with ZipFile(input_file, 'r') as z: # Descomprime el archivo de entrada en la nueva carpeta.
         z.extractall(extraction_path)
-    print('Se ha descomprimido %s en: %s' % (filename , extraction_path))
+    print('Unzipped %s in: %s' % (filename , extraction_path))
     return extraction_path # Proporciona la ruta donde se han extraido los ficheros.
 
 def find_extension(filepath, file_extension):
@@ -38,7 +38,7 @@ def find_extension(filepath, file_extension):
             filename, extension = os.path.splitext(name)
             if extension == file_extension: # Comprueba la extensión de cada archivo.
                out_path.append(os.path.join(root, name).replace("\\","/")) # Almacena la ruta de los archivos coincidentes.
-    print('%d archivo/s con extensión %s encontrado/s en la carpeta: %s' % (len(out_path), file_extension, filepath))
+    print('%d file/s with extension %s has/have been found in: %s' % (len(out_path), file_extension, filepath))
     if out_path: # Proporciona la lista de rutas en caso de encontrar archivos con la misma extensión.
         return out_path
 
