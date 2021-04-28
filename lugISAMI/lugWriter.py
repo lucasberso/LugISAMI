@@ -66,9 +66,8 @@ class lugInput():
 
         # Incluye las primeras líneas de materiales en el archivo.
         for keys in self.material_data.keys():
-            file.writelines("MS.LoadMaterial("+ "'" + keys + "'" + "," + self.material_data[keys]["ISAMI Name"] + ","
-                            + self.material_data[keys]["CODE"] + "," + self.material_data[keys]["User/Referenced"]
-                            +")\n")
+            file.writelines("MS.LoadMaterial("+ "'" + keys + "'" + "," + "'" + self.material_data[keys]["ISAMI Name"] + "'" + ","
+                            + "'" + self.material_data[keys]["CODE"] + "'" + "," + "'" + self.material_data[keys]["User/Referenced"] + "'" + ")\n")
         file.writelines(" \n")
 
         cont = 1 # Contador en caso de múltiples casos de estudio.

@@ -66,6 +66,8 @@ def read_sheet(initial_row, initial_column, header_row, name_sheet, book):
                 continue
             key = sheet.cell(header_row, j).value
             value = sheet.cell(i, j).value
+            if value is None:
+                value = ""
             aux_dict.update({key: value})
         input_global.update({name: aux_dict})
     return input_global
