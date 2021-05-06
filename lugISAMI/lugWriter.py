@@ -152,7 +152,11 @@ class lugInput():
             "['/FatigueLaw','Enum_ToggleFatigueLaw:AFI LAW'],\n"
             "['/Orientation_init','Enum_Orientation:" + dic_folder["/Orientation_init"] + "'],\n"
             "['/Configuration_init','S:" +
-                            self.material_data[dic_folder["/StructureMaterial"]]["Configuration"] + "'],\n"  
+                            self.material_data[dic_folder["/StructureMaterial"]]["Configuration"] + "'],\n"
+            "['/SiteParam[0]','AirbusEO_DSingleSiteParam:'],\n"
+            "['/SiteParam[0]/CsmMbr_Uptodate','B:TRUE'],\n"
+            "['/SiteParam[0]/CsmMbr_UserFullPath','S:'],\n"
+            "['/SiteParam[0]/SiteName','S:Bore'],\n"                                                                                  
             "])\n \n")
             # Creación de líneas correspondientes a initiation_lug.
             file.writelines("MS.CreateStandaloneAnalysis('initiation_lug',None,[\n"
