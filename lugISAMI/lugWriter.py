@@ -58,6 +58,7 @@ class lugInput():
         # Encabezado del archivo de entrada a ISAMI.
         file.writelines("########################\n")
         file.writelines("# ISAMI VERSION: 8.0.0 #\n")
+        file.writelines("# TOOL  VERSION: 1.0   #\n")
         file.writelines("# ANALYSIS: LUG        #\n")
         file.writelines("# Mode: SAA            #\n")
         file.writelines("# Written by: ALTRAN   #\n")
