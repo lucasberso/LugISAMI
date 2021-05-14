@@ -56,14 +56,14 @@ class lugInput():
         today_date = date.today() # Fecha de creación del archivo de entrada a ISAMI.
 
         # Encabezado del archivo de entrada a ISAMI.
-        file.writelines("########################\n")
-        file.writelines("# ISAMI VERSION: 8.0.0 #\n")
-        file.writelines("# TOOL  VERSION: 1.0   #\n")
-        file.writelines("# ANALYSIS: LUG        #\n")
-        file.writelines("# Mode: SAA            #\n")
-        file.writelines("# Written by: ALTRAN   #\n")
-        file.writelines("# Date: " + today_date.strftime("%d/%m/%Y") + "     #\n")
-        file.writelines("######################\n")
+        file.writelines("############################\n")
+        file.writelines("# ISAMI VERSION: v11.0.0   #\n")
+        file.writelines("# ISAMI_LUG VERSION: v1.0  #\n")
+        file.writelines("# ANALYSIS: LUG            #\n")
+        file.writelines("# Mode: SAA                #\n")
+        file.writelines("# Written by: ALTRAN       #\n")
+        file.writelines("# Date: " + today_date.strftime("%d/%m/%Y") + "         #\n")
+        file.writelines("#########################\n")
 
         # Incluye las primeras líneas de materiales en el archivo.
         for keys in self.material_data.keys():

@@ -96,7 +96,11 @@ class lugHTML():
         file = open(self.output_file + '.txt', "x")
 
         self.parse_html() # Obtiene los html de entrada.
-        file.writelines("# TOOL VERSION: 1.0 # \n\n")
+        file.write("############################\n")
+        file.write("#  ISAMI VERSION: v11.1.0  #\n")
+        file.write("#      INITIATION LUG      #\n")
+        file.write("#  ISAMI_LUG VERSION: v1.0 #\n")
+        file.write("############################\n")
         for id in self.parsed_html_dic: # Escribe la salida en el txt con el nombre del caso y kt correspondiente.
             file.writelines('-----------------------------------\n')
             header = id + "\n"
