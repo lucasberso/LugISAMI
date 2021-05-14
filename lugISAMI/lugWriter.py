@@ -67,9 +67,8 @@ class lugInput():
 
         # Incluye las primeras líneas de materiales en el archivo.
         for keys in self.material_data.keys():
-            file.writelines("MS.LoadMaterial("+ "'" + keys + "'" + "," + self.material_data[keys]["ISAMI Name"] + ","
-                            + self.material_data[keys]["CODE"] + "," + self.material_data[keys]["User/Referenced"]
-                            +")\n")
+            file.writelines("MS.LoadMaterial("+ "'" + keys + "'" + "," + "'" + self.material_data[keys]["ISAMI Name"] + "'" + ","
+                            + "'" + self.material_data[keys]["CODE"] + "'" + "," + "'" + self.material_data[keys]["User/Referenced"] + "'" + ")\n")
         file.writelines(" \n")
 
         cont = 1 # Contador en caso de múltiples casos de estudio.
@@ -154,7 +153,11 @@ class lugInput():
             "['/FatigueLaw','Enum_ToggleFatigueLaw:AFI LAW'],\n"
             "['/Orientation_init','Enum_Orientation:" + dic_folder["/Orientation_init"] + "'],\n"
             "['/Configuration_init','S:" +
-                            self.material_data[dic_folder["/StructureMaterial"]]["Configuration"] + "'],\n"  
+                            self.material_data[dic_folder["/StructureMaterial"]]["Configuration"] + "'],\n"
+            "['/SiteParam[0]','AirbusEO_DSingleSiteParam:'],\n"
+            "['/SiteParam[0]/CsmMbr_Uptodate','B:TRUE'],\n"
+            "['/SiteParam[0]/CsmMbr_UserFullPath','S:'],\n"
+            "['/SiteParam[0]/SiteName','S:Bore'],\n"                                                                                  
             "])\n \n")
             # Creación de líneas correspondientes a initiation_lug.
             file.writelines("MS.CreateStandaloneAnalysis('initiation_lug',None,[\n"
